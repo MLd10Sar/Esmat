@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Array for Quantity Units -->
+    <string-array name="quantity_units">
+        <item>@string/unit_select</item>   <!-- "واحد" -->
+        <item>@string/unit_piece</item>    <!-- "دانه" -->
+        <item>@string/unit_kg</item>       <!-- "کیلو" -->
+        <item>@string/unit_litre</item>    <!-- "لیتر" -->
+        <item>@string/unit_meter</item>    <!-- "متر" -->
+        <item>@string/unit_ton</item>      <!-- <<< NEW >>> -->
+        <item>@string/unit_charak</item>   <!-- <<< NEW >>> -->
+        <item>@string/unit_carton</item>   <!-- <<< NEW >>> -->
+        <item>@string/unit_seer</item>     <!-- <<< NEW >>> -->
+        <!-- Add other common units -->
+    </string-array>
+
+
+    <!-- Array for Customer Types -->
+    <string-array name="customer_types">
+        <item>@string/type_customer</item>  <!-- مشتری -->
+        <item>@string/type_supplier</item> <!-- فروشنده -->
+        <item>@string/type_other</item>    <!-- دیگر -->
+        <!-- Add other types if needed -->
+    </string-array>
+
+</resources>

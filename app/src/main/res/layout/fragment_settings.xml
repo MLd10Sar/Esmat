@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvChangePin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="تغییر رمز"
+        style="@style/SettingsItemStyle" /> <!-- Create this style for consistency -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"/>
+
+    <!-- NEW: Backup Data -->
+    <TextView
+        android:id="@+id/tvBackupData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="تهیه نسخه پشتیبان (بکاپ)"
+        style="@style/SettingsItemStyle" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"/>
+
+    <!-- NEW: Restore Data -->
+    <TextView
+        android:id="@+id/tvRestoreData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="بازیابی اطلاعات از بکاپ"
+        style="@style/SettingsItemStyle" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"/>
+    <View style="@style/DashboardDivider" />
+
+    <!-- <<< ADD THIS ITEM >>> -->
+    <TextView
+        android:id="@+id/tvAboutApp"
+        style="@style/SettingsItemStyle"
+        android:text="درباره برنامه" />
+
+    <View style="@style/DashboardDivider" />
+
+</LinearLayout>

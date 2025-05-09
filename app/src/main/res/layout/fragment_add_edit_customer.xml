@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        tools:context=".ui.customer.AddEditCustomerFragment">
+
+        <!-- Customer Name (Required) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCustomerName"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_customer_name_required"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etCustomerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName|textCapWords" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Customer Code (Optional) -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilCustomerCode"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/hint_customer_code_optional"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tilCustomerName">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/etCustomerCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text" />
+</com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Customer Type (Optional Spinner) -->
+<com.google.android.material.textfield.TextInputLayout
+android:id="@+id/tilCustomerType"
+style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_marginTop="8dp"
+android:hint="@string/hint_customer_type_optional"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tilCustomerCode">
+
+<AutoCompleteTextView
+android:id="@+id/spinnerCustomerType"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Contact Info (Optional) -->
+<com.google.android.material.textfield.TextInputLayout
+android:id="@+id/tilCustomerContact"
+style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_marginTop="8dp"
+android:hint="@string/hint_customer_contact_optional"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/tilCustomerType">
+
+<com.google.android.material.textfield.TextInputEditText
+android:id="@+id/etCustomerContact"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:inputType="textMultiLine|phone" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Active Status (Optional Switch) -->
+<com.google.android.material.materialswitch.MaterialSwitch
+android:id="@+id/switchCustomerActive"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="@string/label_customer_active"
+    android:layout_marginTop="16dp"
+    app:layout_constraintTop_toBottomOf="@id/tilCustomerContact"
+    app:layout_constraintStart_toStartOf="parent"/>
+
+
+    <!-- Save Button -->
+<com.google.android.material.button.MaterialButton
+android:id="@+id/btnSaveCustomer"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_marginTop="24dp"
+android:text="@string/save"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@+id/switchCustomerActive" />
+
+    <!-- Delete Button (Only visible when editing) -->
+<com.google.android.material.button.MaterialButton
+android:id="@+id/btnDeleteCustomer"
+style="@style/Widget.MaterialComponents.Button.TextButton"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_marginTop="8dp"
+android:text="@string/delete"
+android:textColor="?attr/colorError"
+android:visibility="gone"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/btnSaveCustomer"
+android:layout_marginBottom="16dp"
+tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>

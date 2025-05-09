@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:layoutDirection="rtl">
+
+    <TextView
+        android:id="@+id/menu_add_sale"
+        style="@style/BottomSheetMenuItemStyle"
+        android:text="ثبت فروش جدید" />
+
+    <TextView
+        android:id="@+id/menu_add_purchase"
+        style="@style/BottomSheetMenuItemStyle"
+        android:text="ثبت خرید جدید" />
+
+    <TextView
+        android:id="@+id/menu_add_debt"
+        style="@style/BottomSheetMenuItemStyle"
+        android:text="ثبت بدهی جدید" />
+
+    <TextView
+        android:id="@+id/menu_add_receivable"
+        style="@style/BottomSheetMenuItemStyle"
+        android:text="ثبت طلب جدید" />
+
+    <TextView
+        android:id="@+id/menu_add_expense"
+        style="@style/BottomSheetMenuItemStyle"
+        android:text="ثبت مصرف جدید" />
+
+</LinearLayout>
