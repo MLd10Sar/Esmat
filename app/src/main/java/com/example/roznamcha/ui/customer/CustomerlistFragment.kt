@@ -49,7 +49,7 @@ class CustomerListFragment : Fragment() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.list_screen_menu, menu)
+                menuInflater.inflate(R.menu.customer_list_menu, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -71,8 +71,7 @@ class CustomerListFragment : Fragment() {
         // The `customer` variable inside the lambda is the Customer object that was clicked.
         customerAdapter = CustomerAdapter { customer ->
             // This is the code that runs when a list item is clicked
-            navigateToAddEditCustomer(customer.id)
-        }
+            navigateToCustomerDetail(customer.id)        }
 
         binding.recyclerViewCustomers.apply {
             adapter = customerAdapter
@@ -108,9 +107,9 @@ class CustomerListFragment : Fragment() {
     }
 
     // --- ADD THIS NEW HELPER FUNCTION ---
+    // Add this helper function for navigation
     private fun navigateToCustomerDetail(customerId: Long) {
         try {
-            // Use the new action defined in the nav_graph
             val action = CustomerListFragmentDirections.actionCustomerListFragmentToCustomerDetailFragment(customerId)
             findNavController().navigate(action)
         } catch (e: Exception) {

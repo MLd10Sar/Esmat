@@ -1,33 +1,30 @@
-package com.example.roznamcha.utils // Or your utils package
+package com.example.roznamcha.utils
 
 import java.security.MessageDigest
 
 object SecurityUtils {
 
-    // A simple, hardcoded salt. In a real production app, this should be unique per user
-    // and stored securely, but for an offline app, this is a starting point.
-    private const val PASSWORD_SALT = "Ketabat_Offline_App_Salt_!@#$"
+    private const val SALT = "Roznamcha_Super_Secret_Salt_12345"
 
-    /**
-     * Hashes a PIN using SHA-256 with a salt.
-     * @param pin The 4-digit PIN to hash.
-     * @return The hexadecimal string representation of the hash.
-     */
     fun hashPassword(password: String): String {
-        val dataToHash = PASSWORD_SALT + password // Combine PIN with salt
+        val dataToHash = SALT + password
         val messageDigest = MessageDigest.getInstance("SHA-256")
         val hashBytes = messageDigest.digest(dataToHash.toByteArray(Charsets.UTF_8))
-        // Convert byte array to Hex String
         return bytesToHexString(hashBytes)
     }
 
+    fun getSalt(): String {
+        return SALT
+    }
+
     private fun bytesToHexString(bytes: ByteArray): String {
-        val hexChars = CharArray(bytes.size * 2)
+        val hexChars = "0123456789ABCDEF".toCharArray()
+        val result = CharArray(bytes.size * 2)
         for (j in bytes.indices) {
             val v = bytes[j].toInt() and 0xFF
-            hexChars[j * 2] = "0123456789ABCDEF"[v ushr 4]
-            hexChars[j * 2 + 1] = "0123456789ABCDEF"[v and 0x0F]
+            result[j * 2] = hexChars[v ushr 4]
+            result[j * 2 + 1] = hexChars[v and 0x0F]
         }
-        return String(hexChars)
+        return String(result)
     }
 }

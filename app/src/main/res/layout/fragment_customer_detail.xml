@@ -8,46 +8,62 @@
     android:layoutDirection="rtl"
     tools:context=".ui.customer.CustomerDetailFragment">
 
-    <!-- Top Card: Customer Info & Balance -->
+    <!-- Top Card: Customer Info, Balance & Summary -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardElevation="2dp">
-        <LinearLayout
+        android:layout_margin="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Customer Name -->
             <TextView
                 android:id="@+id/tv_customer_detail_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceHeadline5"
-                tools:text="احمد ولی" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Ahmad" />
 
+            <!-- Customer Contact Info -->
             <TextView
                 android:id="@+id/tv_customer_detail_contact"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?android:attr/textColorSecondary"
+                app:layout_constraintTop_toBottomOf="@id/tv_customer_detail_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:text="0700112233" />
 
+            <!-- Divider -->
             <View
-                android:layout_width="match_parent"
+                android:id="@+id/divider1"
+                android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_customer_detail_contact"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- Current Balance (Left Side) -->
             <TextView
+                android:id="@+id/labelBalance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="باقی مانده حساب فعلی"
-                android:textAppearance="?attr/textAppearanceBody1" />
+                android:textAppearance="?attr/textAppearanceBody1"
+                app:layout_constraintTop_toBottomOf="@id/divider1"
+                app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
                 android:id="@+id/tv_customer_balance"
@@ -56,9 +72,54 @@
                 android:layout_marginTop="4dp"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textStyle="bold"
-                tools:text="2,500.00 AFN" />
+                app:layout_constraintTop_toBottomOf="@id/labelBalance"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="14,014.00 AFN" />
 
-        </LinearLayout>
+            <!-- Activity Summary (Right Side) -->
+            <LinearLayout
+                android:id="@+id/layoutActivitySummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end"
+                app:layout_constraintTop_toTopOf="@id/labelBalance"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/tvTotalSalesToCustomer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    tools:text="مجموع فروشات: 15,000 AFN" />
+
+                <TextView
+                    android:id="@+id/tvLastSeen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    tools:text="آخرین معامله: امروز" />
+            </LinearLayout>
+
+            <!-- AI Insight (Below the balance) -->
+            <TextView
+                android:id="@+id/tvCustomerInsight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/insight_background"
+                android:padding="8dp"
+                android:drawablePadding="8dp"
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_lightbulb"
+                app:layout_constraintTop_toBottomOf="@id/tv_customer_balance"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="💡 تحلیل: این مشتری معمولاً سریع پرداخت میکند."
+                tools:visibility="visible"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <!-- Label for Transaction History -->

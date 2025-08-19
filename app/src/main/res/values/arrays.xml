@@ -15,6 +15,15 @@
         <!-- Add other common units -->
     </string-array>
 
+    <string-array name="security_questions">
+        <item>@string/q1</item>
+        <item>@string/q2</item>
+        <item>@string/q3</item>
+        <item>@string/q4</item>
+        <item>@string/q5</item>
+        <item>@string/q6</item>
+    </string-array>
+
 
     <!-- Array for Customer Types -->
     <string-array name="customer_types">

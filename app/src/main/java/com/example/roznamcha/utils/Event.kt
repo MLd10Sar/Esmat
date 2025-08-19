@@ -1,7 +1,8 @@
-package com.example.roznamcha.utils // Or your utils package
+package com.example.roznamcha.utils
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
+ * This prevents the event (like a Toast message) from being shown again on screen rotation.
  */
 open class Event<out T>(private val content: T) {
 

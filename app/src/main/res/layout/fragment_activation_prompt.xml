@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:layoutDirection="rtl"
+    tools:context=".ui.auth.ActivationPromptFragment">
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_lock_open"
+        app:tint="?attr/colorPrimary"
+        android:contentDescription="Unlock Icon"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="نسخه آزمایشی شما تمام شد!"
+        android:textAppearance="?attr/textAppearanceHeadline5"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="برای ثبت معاملات نامحدود و استفاده از تمام امکانات، برنامه را فعال سازید."
+        android:textAppearance="?attr/textAppearanceBody1" />
+
+    <!-- Action Button 1: Activate if they already have a code -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGoToActivation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="کود فعال سازی دارم"
+        android:paddingVertical="12dp"/>
+
+    <!-- Action Button 2: Contact you via WhatsApp to get a code -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContactWhatsapp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="خرید کود از طریق واتساپ"
+        app:icon="@drawable/ic_whatsapp"
+        android:paddingVertical="12dp"/>
+
+    <!-- Action Button 3: Contact you via Phone Call -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContactCall"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="تماس تلفنی برای خرید کود" />
+
+</LinearLayout>

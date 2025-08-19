@@ -24,13 +24,23 @@ interface TransactionDao {
     // --- Single Item Retrieval ---
     @Query("SELECT * FROM transactions WHERE id = :id")
     fun getTransactionById(id: Long): Flow<Transaction?>
+    //our new update for AI
+    @Query("SELECT SUM(amount) FROM transactions WHERE customerId = :customerId AND category = 'SALE'")
+    fun getTotalSalesForCustomer(customerId: Long): Flow<Double?>
 
     // --- List Screen Queries ---
-    @Query("SELECT * FROM transactions WHERE category = :categoryName ORDER BY dateMillis DESC")
-    fun getTransactionsByCategory(categoryName: String): Flow<List<Transaction>>
+    //@Query("SELECT * FROM transactions WHERE category = :categoryName ORDER BY dateMillis DESC")
+    //fun getTransactionsByCategory(categoryName: String): Flow<List<Transaction>>
 
-    @Query("SELECT * FROM transactions WHERE category = :categoryName AND description LIKE :queryPattern ORDER BY dateMillis DESC")
-    fun searchTransactionsByCategoryAndDescription(categoryName: String, queryPattern: String): Flow<List<Transaction>>
+    // <<< REPLACE the old searchTransactionsByCategory with this more powerful version >>>
+    @Query("""
+        SELECT * FROM transactions
+        WHERE category = :categoryName
+        AND description LIKE :queryPattern
+        AND (:includeSettlements = 1 OR parentTransactionId IS NULL)
+        ORDER BY dateMillis DESC
+    """)
+    fun searchTransactionsByCategory(categoryName: String, queryPattern: String, includeSettlements: Boolean): Flow<List<Transaction>>
 
     // <<< CORRECTED & FINAL QUERY for Dashboard Debt Total >>>
     @Query("""
@@ -148,4 +158,33 @@ interface TransactionDao {
         LIMIT :limit
     """)
     fun getTopCustomersBySale(start: Long, end: Long, limit: Int = 5): Flow<List<CustomerSaleTotal>>
+
+    @Query("SELECT * FROM transactions WHERE customerId = :customerId ORDER BY dateMillis DESC")
+    fun getTransactionHistoryForCustomer(customerId: Long): Flow<List<Transaction>>
+
+    // --- NEW QUERIES FOR SMART REMINDERS ---
+
+    /**
+     * Counts the number of unsettled receivables (credit sales or pure receivables)
+     * that are older than a given timestamp.
+     */
+    @Query("""
+        SELECT COUNT(id) FROM transactions
+        WHERE isSettled = 0
+        AND (category = 'SALE' OR category = 'RECEIVABLE')
+        AND dateMillis < :overdueTimestamp
+    """)
+    suspend fun getOverdueReceivablesCount(overdueTimestamp: Long): Int
+
+    /**
+     * Counts the number of unsettled debts (credit purchases or pure debts)
+     * that are older than a given timestamp.
+     */
+    @Query("""
+        SELECT COUNT(id) FROM transactions
+        WHERE isSettled = 0
+        AND (category = 'PURCHASE' OR category = 'DEBT')
+        AND dateMillis < :overdueTimestamp
+    """)
+    suspend fun getOverdueDebtsCount(overdueTimestamp: Long): Int
 }

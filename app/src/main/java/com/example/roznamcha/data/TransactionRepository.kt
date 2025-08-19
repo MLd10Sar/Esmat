@@ -37,10 +37,9 @@ class TransactionRepository(
 
     // --- Transaction Retrieval & Search ---
     fun getTransactionById(id: Long): Flow<Transaction?> = transactionDao.getTransactionById(id)
-    fun getTransactionsByCategory(categoryName: String): Flow<List<Transaction>> = transactionDao.getTransactionsByCategory(categoryName)
-    fun searchTransactionsByCategoryAndDescription(categoryName: String, query: String): Flow<List<Transaction>> {
+    fun searchTransactionsByCategory(categoryName: String, query: String, includeSettlements: Boolean): Flow<List<Transaction>> {
         val queryPattern = "%${query}%"
-        return transactionDao.searchTransactionsByCategoryAndDescription(categoryName, queryPattern)
+        return transactionDao.searchTransactionsByCategory(categoryName, queryPattern, includeSettlements)
     }
     fun getUnsettledReceivablesList(query: String): Flow<List<Transaction>> {
         val queryPattern = "%${query}%"
@@ -64,6 +63,20 @@ class TransactionRepository(
 
     fun getUnsettledReceivablesTotal(): Flow<Double?> {
         return transactionDao.getUnsettledReceivablesTotal()
+    }
+
+    // --- NEW METHODS for Smart Reminders ---
+    suspend fun getOverdueReceivablesCount(overdueTimestamp: Long): Int {
+        return transactionDao.getOverdueReceivablesCount(overdueTimestamp)
+    }
+
+    suspend fun getOverdueDebtsCount(overdueTimestamp: Long): Int {
+        return transactionDao.getOverdueDebtsCount(overdueTimestamp)
+    }
+    // <<< ADD THIS MISSING FUNCTION >>>
+    fun getTotalSalesForCustomer(customerId: Long): Flow<Double?> {
+        // You'll need to add the corresponding query to your TransactionDao.kt
+        return transactionDao.getTotalSalesForCustomer(customerId)
     }
 
     fun getUnsettledDebtsTotalForRange(startDate: Long, endDate: Long): Flow<Double?> {
@@ -99,4 +112,8 @@ class TransactionRepository(
     // --- Customer Snapshot Methods ---
     fun getLastTransactionDateForCustomer(customerId: Long): Flow<Long?> = transactionDao.getLastTransactionDateForCustomer(customerId)
     fun getOutstandingBalanceForCustomer(customerId: Long): Flow<Double?> = transactionDao.getOutstandingBalanceForCustomer(customerId)
+
+    fun getTransactionHistoryForCustomer(customerId: Long): Flow<List<Transaction>> {
+        return transactionDao.getTransactionHistoryForCustomer(customerId)
+    }
 }

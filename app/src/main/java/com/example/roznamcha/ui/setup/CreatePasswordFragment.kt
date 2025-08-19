@@ -49,15 +49,12 @@ class CreatePasswordFragment : Fragment() {
         Log.d("CreatePasswordFragment", "Password hash saved successfully.")
 
         // --- THE CRITICAL FIX ---
-        // After creating a password, the setup is complete for the trial.
-        // Navigate directly to the Dashboard. The activation screen will only be shown
-        // when the trial limit is reached.
+        // After creating a password, navigate to the security questions screen.
         try {
-            Log.d("CreatePasswordFragment", "Navigating to DashboardFragment...")
-            // Ensure you have an action from createPassword to dashboard
-            findNavController().navigate(R.id.action_createPasswordFragment_to_dashboardFragment)
+            Log.d("CreatePasswordFragment", "Navigating to SaveSecurityQuestionsFragment...")
+            findNavController().navigate(R.id.action_createPasswordFragment_to_saveSecurityQuestionsFragment)
         } catch (e: Exception) {
-            Log.e("CreatePasswordFragment", "Navigation to DashboardFragment failed!", e)
+            Log.e("CreatePasswordFragment", "Navigation to Security Questions failed!", e)
         }
     }
 

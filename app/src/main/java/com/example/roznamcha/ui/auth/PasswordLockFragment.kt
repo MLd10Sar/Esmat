@@ -25,16 +25,22 @@ class PasswordLockFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Assuming your button ID in fragment_password_lock.xml is btnUnlock
+
         binding.btnUnlock.setOnClickListener { unlockApp() }
-        // Assuming your EditText ID is etPasswordLock
         binding.etPasswordLock.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 unlockApp()
                 true
             } else { false }
         }
+
+        // <<< ADD THIS CLICK LISTENER >>>
+        // Assuming your "Forgot Password?" TextView has the ID 'tvForgotPassword'
+        binding.tvForgotPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_passwordLockFragment_to_recoverPasswordFragment)
+        }
     }
+
 
     private fun unlockApp() {
         // Assuming your EditText ID is etPasswordLock

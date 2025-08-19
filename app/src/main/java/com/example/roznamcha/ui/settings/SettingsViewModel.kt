@@ -3,85 +3,83 @@ package com.example.roznamcha.ui.settings
 import android.app.Application
 import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.core.content.FileProvider
+import androidx.lifecycle.*
 import com.example.roznamcha.AppDatabase
+import com.example.roznamcha.SettingsManager
+import com.example.roznamcha.utils.CryptoManager
+import com.example.roznamcha.utils.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import java.io.File
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _backupStatus = MutableLiveData<Boolean>()
-    val backupStatus: LiveData<Boolean> = _backupStatus
+    private val _encryptedBackupReadyEvent = MutableLiveData<Event<Uri>>()
+    val encryptedBackupReadyEvent: LiveData<Event<Uri>> = _encryptedBackupReadyEvent
 
-    private val _restoreStatus = MutableLiveData<Boolean>()
-    val restoreStatus: LiveData<Boolean> = _restoreStatus
+    private val _backupFailedEvent = MutableLiveData<Event<Unit>>()
+    val backupFailedEvent: LiveData<Event<Unit>> = _backupFailedEvent
 
-    fun backupDatabase(destinationUri: Uri) {
+    private val _restoreStatusEvent = MutableLiveData<Event<Boolean>>()
+    val restoreStatusEvent: LiveData<Event<Boolean>> = _restoreStatusEvent
+
+    private val cryptoManager = CryptoManager()
+
+
+    fun createEncryptedBackup() {
         viewModelScope.launch(Dispatchers.IO) {
-            val context = getApplication<Application>().applicationContext
-            // Get the database instance
-            val db = AppDatabase.getDatabase(context)
-            // Get the actual path of the database file on the device
-            val dbFile = context.getDatabasePath(AppDatabase.DATABASE_NAME) // You need to expose DB_NAME from AppDatabase
+            val context = getApplication<Application>()
+            val dbFile = context.getDatabasePath(AppDatabase.DATABASE_NAME)
+            val encryptedFile = File(context.cacheDir, "roznamcha_backup.db.enc")
 
-            // Close the database to ensure all data is written to the main file (-wal checkpoint)
-            db.close()
-
-            var success = false
             try {
-                // Use ContentResolver to write to the location the user chose
-                context.contentResolver.openFileDescriptor(destinationUri, "w")?.use { descriptor ->
-                    FileOutputStream(descriptor.fileDescriptor).use { outputStream ->
-                        FileInputStream(dbFile).use { inputStream ->
-                            inputStream.copyTo(outputStream)
-                            success = true
-                        }
-                    }
-                }
+                // <<< STEP 1: CLOSE and NULLIFY the instance >>>
+                AppDatabase.closeInstance()
+
+                // Now that the DB is closed, we can safely copy and encrypt it
+                cryptoManager.encrypt(dbFile, encryptedFile)
+
+                val authority = "${context.packageName}.provider"
+                val fileUri = FileProvider.getUriForFile(context, authority, encryptedFile)
+
+                _encryptedBackupReadyEvent.postValue(Event(fileUri))
+                SettingsManager.saveLastBackupTimestamp(context, System.currentTimeMillis())
             } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Backup failed", e)
-                success = false
-            } finally {
-                // Re-open the database for the app to continue working
-                AppDatabase.getDatabase(context)
-                _backupStatus.postValue(success)
+                Log.e("BackupRestore", "Backup creation failed", e)
+                _backupFailedEvent.postValue(Event(Unit))
             }
         }
     }
 
-    fun restoreDatabase(backupUri: Uri) {
+    fun restoreDatabase(sourceUri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            val context = getApplication<Application>().applicationContext
-            val db = AppDatabase.getDatabase(context)
+            val context = getApplication<Application>()
             val dbFile = context.getDatabasePath(AppDatabase.DATABASE_NAME)
+            val tempEncryptedFile = File(context.cacheDir, "backup_to_restore.db.enc")
 
-            // Close the database to release file locks
-            db.close()
-
-            var success = false
             try {
-                // Use ContentResolver to read from the backup file the user chose
-                context.contentResolver.openInputStream(backupUri)?.use { inputStream ->
-                    FileOutputStream(dbFile).use { outputStream ->
+                // <<< STEP 1: CLOSE and NULLIFY the current database instance >>>
+                // This is CRITICAL to release the file lock before overwriting.
+                AppDatabase.closeInstance()
+
+                // Step 2: Copy the user-selected file to a temporary location
+                context.contentResolver.openInputStream(sourceUri)?.use { inputStream ->
+                    tempEncryptedFile.outputStream().use { outputStream ->
                         inputStream.copyTo(outputStream)
-                        success = true
                     }
                 }
-                // Optional: Restore the -wal and -shm files if they exist in a more complex backup
-                // For this simple copy, we are just replacing the main .db file.
+
+                // Step 3: Decrypt the temporary file, overwriting the original DB file
+                cryptoManager.decrypt(tempEncryptedFile, dbFile)
+
+                Log.d("BackupRestore", "Database file successfully restored.")
+                tempEncryptedFile.delete() // Clean up
+                _restoreStatusEvent.postValue(Event(true)) // Signal success
             } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Restore failed", e)
-                success = false
-            } finally {
-                // IMPORTANT: We do not re-open the database here.
-                // We will restart the app, which will force Room to re-initialize
-                // from the newly copied database file.
-                _restoreStatus.postValue(success)
+                Log.e("BackupRestore", "Restore failed", e)
+                tempEncryptedFile.delete()
+                _restoreStatusEvent.postValue(Event(false))
             }
         }
     }

@@ -1,56 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layoutDirection="rtl"
+    tools:context=".ui.settings.SettingsFragment">
 
-    <TextView
-        android:id="@+id/tvChangePin"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="تغییر رمز"
-        style="@style/SettingsItemStyle" /> <!-- Create this style for consistency -->
+        android:orientation="vertical"
+        android:paddingTop="8dp">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"/>
+        <!-- Change Password Row -->
+        <TextView
+            android:id="@+id/tvChangePassword"
+            style="@style/SettingsItemStyle"
+            android:text="تغییر رمز عبور"
+            app:drawableStartCompat="@drawable/ic_lock"
+            android:drawablePadding="16dp"/>
 
-    <!-- NEW: Backup Data -->
-    <TextView
-        android:id="@+id/tvBackupData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="تهیه نسخه پشتیبان (بکاپ)"
-        style="@style/SettingsItemStyle" />
+        <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"/>
+        <!-- Backup Data Row -->
+        <TextView
+            android:id="@+id/tvBackupData"
+            style="@style/SettingsItemStyle"
+            android:text="تهیه نسخه پشتیبان (بکاپ)"
+            app:drawableStartCompat="@drawable/ic_backup"
+            android:drawablePadding="16dp"/>
 
-    <!-- NEW: Restore Data -->
-    <TextView
-        android:id="@+id/tvRestoreData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="بازیابی اطلاعات از بکاپ"
-        style="@style/SettingsItemStyle" />
+        <!-- Last Backup Status -->
+        <TextView
+            android:id="@+id/tvLastBackupStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp"
+            android:gravity="start"
+            android:textAppearance="?attr/textAppearanceCaption"
+            tools:text="آخرین بکاپ: امروز ساعت ۱۰ صبح"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"/>
-    <View style="@style/DashboardDivider" />
+        <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
 
-    <!-- <<< ADD THIS ITEM >>> -->
-    <TextView
-        android:id="@+id/tvAboutApp"
-        style="@style/SettingsItemStyle"
-        android:text="درباره برنامه" />
+        <!-- Restore Data Row -->
+        <TextView
+            android:id="@+id/tvRestoreData"
+            style="@style/SettingsItemStyle"
+            android:text="بازیابی اطلاعات از بکاپ"
+            app:drawableStartCompat="@drawable/ic_restore"
+            android:drawablePadding="16dp"/>
 
-    <View style="@style/DashboardDivider" />
+        <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
 
-</LinearLayout>
+
+
+        <!-- About App Row -->
+        <TextView
+            android:id="@+id/tvAboutApp"
+            style="@style/SettingsItemStyle"
+            android:text="@string/about_app_title"
+            app:drawableStartCompat="@drawable/ic_info"
+            android:drawablePadding="16dp"/>
+
+        <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
+
+    </LinearLayout>
+</ScrollView>

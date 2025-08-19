@@ -2,17 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- This menu ONLY contains the 'Add New' item -->
     <item
         android:id="@+id/action_add_new_item"
         android:icon="@drawable/ic_add"
         android:title="Add"
-        app:showAsAction="ifRoom" />
-
-    <!-- <<< ADD THIS ITEM for the filter switch >>> -->
-    <item
-        android:id="@+id/action_toggle_settlements"
-        android:title="نمایش معاملات تصفیه"
-        app:actionLayout="@layout/menu_item_switch"
         app:showAsAction="ifRoom" />
 
 </menu>

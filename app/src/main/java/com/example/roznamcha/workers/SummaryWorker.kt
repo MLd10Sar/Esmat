@@ -21,6 +21,8 @@ import com.example.roznamcha.data.TransactionRepository
 import com.example.roznamcha.AppDatabase // <<< Make sure this import is correct
 import kotlinx.coroutines.flow.firstOrNull
 import java.text.NumberFormat
+import java.text.SimpleDateFormat // Add this if missing
+import java.util.Date // Add this if missing
 import java.util.*
 
 class SummaryWorker(
@@ -30,6 +32,7 @@ class SummaryWorker(
 
     // Unique ID for the notification channel
     private val CHANNEL_ID = "DAILY_SUMMARY_CHANNEL"
+    private val TAG = "SummaryWorker-DEBUG" // Create a specific tag for easy filtering
 
     override suspend fun doWork(): Result {
         Log.d("SummaryWorker", "Worker starting...")
@@ -39,59 +42,72 @@ class SummaryWorker(
             // 1. Get database and repository instances
             val database = AppDatabase.getDatabase(context)
             val repository = TransactionRepository(
-                context = context,
                 transactionDao = database.transactionDao(),
                 inventoryItemDao = database.inventoryItemDao(),
-                customerDao = database.customerDao()
+                customerDao = database.customerDao(),
+                context = context
             )
 
-            // 2. Calculate Date Range for "Today"
+
+            // --- 1. Calculate and LOG the Date Range ---
             val calendar = Calendar.getInstance()
-            calendar.set(Calendar.HOUR_OF_DAY, 23)
-            calendar.set(Calendar.MINUTE, 59)
-            calendar.set(Calendar.SECOND, 59)
+            val readableFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+
+            calendar.set(Calendar.HOUR_OF_DAY, 23); calendar.set(Calendar.MINUTE, 59); calendar.set(Calendar.SECOND, 59)
             val endOfToday = calendar.timeInMillis
 
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-            calendar.set(Calendar.MINUTE, 0)
-            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.HOUR_OF_DAY, 0); calendar.set(Calendar.MINUTE, 0); calendar.set(Calendar.SECOND, 0)
             val startOfToday = calendar.timeInMillis
 
-            // 3. Fetch Data from the Database
+            Log.d(TAG, "--- Date Range Check ---")
+            Log.d(TAG, "Start Time: ${readableFormat.format(Date(startOfToday))} ($startOfToday)")
+            Log.d(TAG, "End Time:   ${readableFormat.format(Date(endOfToday))} ($endOfToday)")
+
+            // --- 2. Fetch and LOG Data from Database ---
+            Log.d(TAG, "--- Database Fetch ---")
             val salesToday = repository.getTotalForCategoryInRange(
                 TransactionCategory.SALE.name, startOfToday, endOfToday
             ).firstOrNull() ?: 0.0
+            Log.d(TAG, "Total Sales for Today = $salesToday")
 
             val purchasesToday = repository.getTotalForCategoryInRange(
                 TransactionCategory.PURCHASE.name, startOfToday, endOfToday
             ).firstOrNull() ?: 0.0
+            Log.d(TAG, "Total Purchases for Today = $purchasesToday")
 
             val expensesToday = repository.getOperationalExpensesInRange(
                 startOfToday, endOfToday
             ).firstOrNull() ?: 0.0
+            Log.d(TAG, "Total Operational Expenses (Rent, Other) for Today = $expensesToday")
 
-            // 4. Check if there's any activity to report
+            // --- 3. Check for activity to report ---
             if (salesToday == 0.0 && purchasesToday == 0.0 && expensesToday == 0.0) {
-                Log.d("SummaryWorker", "No activity today. Skipping notification.")
-                return Result.success() // Job is done, exit successfully
+                Log.d(TAG, "CONCLUSION: No significant activity found. Skipping notification.")
+                return Result.success()
             }
 
-            // 5. Build the Notification Content
+            // --- 4. Perform and LOG the Final Calculation ---
             val profitToday = salesToday - (purchasesToday + expensesToday)
+            Log.d(TAG, "--- Final Calculation ---")
+            Log.d(TAG, "Profit = (Sales) - (Purchases + Expenses)")
+            Log.d(TAG, "Profit = ($salesToday) - ($purchasesToday + $expensesToday) = $profitToday")
+
+            // --- 5. Build and Show Notification ---
             val nf = NumberFormat.getNumberInstance(Locale.US)
             val salesText = "فروشات: ${nf.format(salesToday)}"
             val profitText = "مفاد: ${nf.format(profitToday)}"
             val contentText = "$salesText | $profitText"
 
-            // 6. Create and Show the Notification
+            Log.d(TAG, "CONCLUSION: Activity found! Showing notification with content: '$contentText'")
+
             createNotificationChannel()
             showNotification("روزنامچه: خلاصه امروز", contentText)
 
-            Log.d("SummaryWorker", "Worker finished successfully.")
+            Log.d(TAG, "---------- Worker finished (SUCCESS) ----------")
             return Result.success()
 
         } catch (e: Exception) {
-            Log.e("SummaryWorker", "Worker failed", e)
+            Log.e(TAG, "---------- Worker failed with an exception ----------", e)
             return Result.failure()
         }
     }

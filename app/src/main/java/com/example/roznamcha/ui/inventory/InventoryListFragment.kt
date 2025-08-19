@@ -50,11 +50,11 @@ class InventoryListFragment : Fragment(), OnInventoryItemClickListener {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.list_screen_menu, menu)
+                menuInflater.inflate(R.menu.inventory_list_menu, menu)
             }
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.action_add_new_item -> {
+                    R.id.action_add_new_inventory_item -> {
                         // When '+' is clicked, navigate to add a new inventory item
                         navigateToAddEditScreen(-1L)
                         true
