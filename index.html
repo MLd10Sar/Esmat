@@ -4,72 +4,195 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دانلود اپلیکیشن روزنامچه</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif; background-color: #f4f7f9; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 700px; margin: 20px auto; background-color: #fff; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); padding: 30px; }
-        .header { text-align: center; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
-        .logo { max-width: 80px; margin-bottom: 10px; }
-        h1 { font-size: 2.2rem; color: #4A148C; margin: 0; }
-        h2 { font-size: 1.5rem; color: #333; margin-top: 30px; }
-        p, li { line-height: 1.7; font-size: 1.1rem; }
-        .step { display: flex; align-items: center; margin-top: 20px; }
-        .step-number { background-color: #4A148C; color: #fff; border-radius: 50%; width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; font-weight: bold; flex-shrink: 0; margin-left: 15px; }
-        .download-button { display: block; background-color: #00BFA5; color: #fff; padding: 18px 30px; border-radius: 10px; text-decoration: none; font-size: 1.3rem; font-weight: bold; margin-top: 15px; text-align: center; transition: all 0.3s ease; }
-        .download-button:hover { background-color: #008c7a; transform: translateY(-2px); }
-        .support { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        body {
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden; /* Important for border-radius on children */
+        }
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #4A148C, #8E24AA);
+            color: #fff;
+        }
+        .logo {
+            max-width: 90px;
+            margin-bottom: 10px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+        }
+        h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            font-weight: 700;
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: #4A148C;
+            margin-top: 40px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00BFA5;
+            display: inline-block;
+        }
+        .section-title-wrapper {
+            text-align: center;
+        }
+        .content {
+            padding: 30px;
+        }
+        p, li {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .feature-item {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #00BFA5;
+            text-align: right;
+        }
+        .feature-item h3 {
+            margin-top: 0;
+            color: #4A148C;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 25px;
+        }
+        .step-icon {
+            background-color: #4A148C;
+            color: #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-left: 20px;
+        }
+        .download-button {
+            display: block;
+            background: linear-gradient(135deg, #00BFA5, #008c7a);
+            color: #fff;
+            padding: 20px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 30px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 191, 165, 0.4);
+        }
+        .download-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 191, 165, 0.6);
+        }
+        .support {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        .support a {
+            color: #4A148C;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
+        <!-- You can host your logo in your GitHub repo and link to it -->
         <!-- <img src="logo.png" alt="لوگو روزنامچه" class="logo"> -->
         <h1>روزنامچه</h1>
-        <p>کتاب حسابات و گدام دیجیتالی برای کسب و کار شما</p>
+        <p style="font-size: 1.2rem; opacity: 0.9;">آپلیکیشن مالی و گدام داری برای کسب و کار شما</p>
     </div>
 
-    <h2>طریقه نصب برنامه (روش تضمینی)</h2>
-
-    <div class="step">
-        <div class="step-number">۱</div>
-        <div>
-            <b>دانلود کردن فایل ZIP</b><br>
-            برای شروع، دکمه سبز زیر را فشار دهید تا فایل برنامه دانلود شود.
+    <div class="content">
+        <div class="section-title-wrapper">
+            <h2>چرا روزنامچه؟</h2>
         </div>
-    </div>
-    <a href="https://github.com/MLd10Sar/Esmat/releases/download/v1.0.0/app-release.apk" class="download-button">
-        دانلود فایل (Roznamcha.zip)
-    </a>
-
-    <div class="step">
-        <div class="step-number">۲</div>
-        <div>
-            <b>باز کردن فایل ZIP</b><br>
-            به بخش 'فایل‌های من' یا 'دانلودها'ی موبایل تان بروید. فایل <b>Roznamcha.zip</b> را پیدا کرده و آنرا باز کنید (Unzip کنید).
+        <div class="features-grid">
+            <div class="feature-item">
+                <h3>مدیریت هوشمند گدام</h3>
+                <p>با هر خرید و فروش، موجودی اجناس تان خود به خود آپدیت میشود.</p>
+            </div>
+            <div class="feature-item">
+                <h3>حسابات شفاف</h3>
+                <p>مفاد و ضرر، طلب و بدهی، و پول نقد تان را در یک نگاه ببینید.</p>
+            </div>
+            <div class="feature-item">
+                <h3>کاملاً آفلاین</h3>
+                <p>بدون نیاز به اینترنت، تمام معلومات شما همیشه در جیب شماست.</p>
+            </div>
         </div>
-    </div>
 
-    <div class="step">
-        <div class="step-number">۳</div>
-        <div>
-            <b>نصب کردن برنامه (APK)</b><br>
-            حالا فایل برنامه (که از ZIP خارج شد) را باز کرده و دکمه <b>Install (نصب)</b> را بزنید.
+        <div class="section-title-wrapper">
+            <h2>طریقه نصب برنامه</h2>
         </div>
-    </div>
 
-    <div class="step">
-        <div class="step-number">۴</div>
-        <div>
-            <b>اجازه دادن به نصب</b><br>
-            اگر پیام امنیتی ظاهر شد، <b>Settings (تنظیمات)</b> را انتخاب کرده و اجازه نصب را فعال کنید. سپس دکمه Back را فشار داده و دوباره نصب کنید.
+        <div class="step">
+            <div class="step-icon">۱</div>
+            <div>
+                <b>دانلود کردن فایل ZIP</b><br>
+                برای شروع، دکمه سبز و درخشان زیر را فشار دهید تا فایل برنامه (Roznamcha.zip) دانلود شود.
+            </div>
         </div>
-    </div>
 
-    <div class="support">
-        <p>
-            برای دریافت کود فعال سازی و پشتیبانی، به شماره واتساپ ما پیام ارسال کنید:
-            <br>
-            <a href="https://wa.me/0785444401"><b>0785444401</b></a>
-        </p>
+        <a href="https://github.com/MLd10Sar/Esmat/releases/download/v1.0.0/roznamcha.zip" class="download-button">
+            دانلود اپلیکیشن (فایل ZIP)
+        </a>
+
+        <div class="step">
+            <div class="step-icon">۲</div>
+            <div>
+                <b>باز کردن فایل ZIP</b><br>
+                به بخش 'فایل‌های من' یا 'دانلودها'ی موبایل تان بروید. فایل <b>Roznamcha.zip</b> را پیدا کرده و آنرا باز (Unzip) کنید.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-icon">۳</div>
+            <div>
+                <b>نصب کردن برنامه (APK)</b><br>
+                حالا فایل برنامه (با آیکن روزنامچه) را که از ZIP خارج شد، باز کرده و دکمه <b>Install (نصب)</b> را بزنید. اگر پیام امنیتی ظاهر شد، <b>Settings (تنظیمات)</b> را انتخاب کرده و اجازه نصب را فعال کنید.
+            </div>
+        </div>
+
+        <div class="support">
+            <p>
+                برای دریافت کود فعال سازی و پشتیبانی، به شماره واتساپ ما پیام ارسال کنید:
+                <br>
+                <a href="https://wa.me/93785444401"><b>0785444401 93+</b></a>
+            </p>
+        </div>
     </div>
 </div>
 </body>
