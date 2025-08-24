@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="450dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/white"
+    android:layoutDirection="rtl">
+
+    <!-- Header: Shop Branding & Title -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgShopLogo"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvReceiptTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="صورت حساب"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvShopNameStatement"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tvReceiptTitle"
+            app:layout_constraintStart_toEndOf="@id/imgShopLogo"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text=""/> <!-- NO tools:text -->
+
+        <TextView
+            android:id="@+id/tvShopAddressStatement"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="#444444"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/tvShopNameStatement"
+            app:layout_constraintEnd_toEndOf="@id/tvShopNameStatement"
+            app:layout_constraintTop_toBottomOf="@id/tvShopNameStatement"
+            android:text=""/> <!-- NO tools:text -->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="2dp" android:background="#eee" android:layout_marginVertical="16dp"/>
+
+    <!-- Customer Info -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="برای محترم: "
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/tvCustomerNameStatement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:text=""/> <!-- NO tools:text -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="تاریخ: "
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/tvStatementDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:text=""/> <!-- NO tools:text -->
+    </LinearLayout>
+
+    <!-- Total Balance Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardTotalBalance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardBackgroundColor="@color/subtle_background_color">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="مجموعه باقی مانده"
+                android:textColor="@color/negative_red"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/tvTotalBalanceStatement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/negative_red"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:text=""/> <!-- NO tools:text -->
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/labelRecentTransactions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="آخرین معاملات باقی مانده:"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black"
+        android:textAppearance="?attr/textAppearanceTitleSmall"/>
+
+    <!-- Container for recent transaction rows -->
+    <LinearLayout
+        android:id="@+id/layoutRecentTransactions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"/>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#eee" android:layout_marginVertical="16dp"/>
+
+    <!-- Footer with QR Code -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical|bottom"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvFooterText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="تشکر از همکاری شما!"
+            android:textSize="12sp"
+            android:textColor="#555"/>
+        <ImageView
+            android:id="@+id/imgQrCode"
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -19,7 +19,31 @@
             android:layout_height="wrap_content"
             android:padding="16dp">
 
-            <!-- Customer Name -->
+            <!-- Activity Summary (Top Right) -->
+            <LinearLayout
+                android:id="@+id/layoutActivitySummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <TextView
+                    android:id="@+id/tv_total_sales_to_customer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    tools:text="مجموع فروشات: 1,089.00 AFN" />
+                <TextView
+                    android:id="@+id/tv_last_seen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    tools:text="آخرین معامله: امروز" />
+            </LinearLayout>
+
+            <!-- Customer Name & Contact (Constrained to not overlap Summary) -->
             <TextView
                 android:id="@+id/tv_customer_detail_name"
                 android:layout_width="0dp"
@@ -27,10 +51,9 @@
                 android:textAppearance="?attr/textAppearanceHeadline5"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="Ahmad" />
-
-            <!-- Customer Contact Info -->
+                app:layout_constraintEnd_toStartOf="@id/layoutActivitySummary"
+                android:layout_marginEnd="16dp"
+                tools:text="Esmatullah" />
             <TextView
                 android:id="@+id/tv_customer_detail_contact"
                 android:layout_width="0dp"
@@ -40,7 +63,8 @@
                 android:textColor="?android:attr/textColorSecondary"
                 app:layout_constraintTop_toBottomOf="@id/tv_customer_detail_name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/layoutActivitySummary"
+                android:layout_marginEnd="16dp"
                 tools:text="0700112233" />
 
             <!-- Divider -->
@@ -54,7 +78,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <!-- Current Balance (Left Side) -->
+            <!-- Current Balance -->
             <TextView
                 android:id="@+id/labelBalance"
                 android:layout_width="wrap_content"
@@ -64,59 +88,66 @@
                 android:textAppearance="?attr/textAppearanceBody1"
                 app:layout_constraintTop_toBottomOf="@id/divider1"
                 app:layout_constraintStart_toStartOf="parent"/>
-
             <TextView
-                android:id="@+id/tv_customer_balance"
+                android:id="@+id/tv_customer_detail_balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textStyle="bold"
+                android:textColor="@color/negative_red"
                 app:layout_constraintTop_toBottomOf="@id/labelBalance"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:text="14,014.00 AFN" />
+                tools:text="27,299.00 AFN طلب" />
 
-            <!-- Activity Summary (Right Side) -->
-            <LinearLayout
-                android:id="@+id/layoutActivitySummary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="end"
-                app:layout_constraintTop_toTopOf="@id/labelBalance"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <TextView
-                    android:id="@+id/tvTotalSalesToCustomer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    tools:text="مجموع فروشات: 15,000 AFN" />
-
-                <TextView
-                    android:id="@+id/tvLastSeen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textAppearance="?attr/textAppearanceCaption"
-                    tools:text="آخرین معامله: امروز" />
-            </LinearLayout>
-
-            <!-- AI Insight (Below the balance) -->
+            <!-- All Insights are chained below the balance -->
             <TextView
-                android:id="@+id/tvCustomerInsight"
+                android:id="@+id/tv_customer_insight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/insight_background"
                 android:padding="8dp"
                 android:drawablePadding="8dp"
                 android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_lightbulb"
-                app:layout_constraintTop_toBottomOf="@id/tv_customer_balance"
+                app:layout_constraintTop_toBottomOf="@id/tv_customer_detail_balance"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="💡 تحلیل: این مشتری معمولاً سریع پرداخت میکند."
+                tools:visibility="visible"/>
+            <TextView
+                android:id="@+id/tv_next_purchase_insight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_shopping_bag"
+                app:layout_constraintTop_toBottomOf="@id/tv_customer_insight"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="معمولاً «کتاب» خریداری میکند."
+                tools:visibility="visible"/>
+            <TextView
+                android:id="@+id/tv_customer_value_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:background="@drawable/tag_background"
+                android:textColor="?attr/colorPrimary"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                android:drawablePadding="8dp"
+                app:drawableStartCompat="@drawable/ic_star_badge"
+                app:layout_constraintTop_toBottomOf="@id/tv_next_purchase_insight"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="مشتری ارزشمند"
                 tools:visibility="visible"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

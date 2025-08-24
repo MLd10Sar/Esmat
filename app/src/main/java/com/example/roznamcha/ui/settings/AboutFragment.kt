@@ -44,9 +44,20 @@ class AboutFragment : Fragment() {
         binding.tvSupportWhatsapp.setOnClickListener {
             openWhatsAppSupport()
         }
+        binding.cardInsightdeed.setOnClickListener {
+            openUrl("https://insightdeed.com/insights") // Replace with your actual URL
+        }
 
         // Add any other listeners here, e.g., for promotional cards
         // binding.cardInsighdeed.setOnClickListener { ... }
+    }
+    private fun openUrl(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(context, "Could not open link.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setAppVersion() {

@@ -129,6 +129,7 @@ interface TransactionDao {
         AND dateMillis BETWEEN :startDate AND :endDate
     """)
     fun getTotalOutstandingReceivablesForRange(startDate: Long, endDate: Long): Flow<Double?>
+    
 
     // --- REPORTS QUERIES ---
     @Query("""

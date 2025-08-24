@@ -3,11 +3,10 @@ package com.example.roznamcha.ui.customer
 import android.app.Application
 import androidx.lifecycle.*
 import com.example.roznamcha.AppDatabase
-import com.example.roznamcha.TransactionCategory
 import com.example.roznamcha.data.TransactionRepository
 import com.example.roznamcha.data.db.entity.Customer
 import com.example.roznamcha.data.db.entity.Transaction
-import com.example.roznamcha.ui.list.TransactionListItem // <<< IMPORT
+import com.example.roznamcha.ui.list.TransactionListItem
 import com.example.roznamcha.utils.CustomerAnalyticsEngine
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
@@ -19,32 +18,45 @@ class CustomerDetailViewModel(
     private val customerId: Long
 ) : AndroidViewModel(application) {
 
-    // --- Primary Data Sources ---
+    // --- Core Data Flow from Repository ---
+    private val transactionsForCustomerFlow = repository.getTransactionsForCustomer(customerId)
+
+    // --- LiveData Properties Exposed to the Fragment ---
     val customer: LiveData<Customer?> = repository.getCustomerById(customerId).asLiveData()
+
+    // Expose the raw list for the fragment to use in statement generation
+    val transactionsForCustomer: LiveData<List<Transaction>> = transactionsForCustomerFlow.asLiveData()
+
     val currentBalance: LiveData<Double> = repository.getOutstandingBalanceForCustomer(customerId)
         .map { it ?: 0.0 }.asLiveData()
+
     val totalSalesToCustomer: LiveData<Double> = repository.getTotalSalesForCustomer(customerId)
         .map { it ?: 0.0 }.asLiveData()
 
-    // Fetches the raw, sorted list of transactions for this customer
-    private val rawTransactionHistory: LiveData<List<Transaction>> =
-        repository.getTransactionsForCustomer(customerId).asLiveData()
+    // Transforms the flow into a list with date headers for the RecyclerView
+    val transactionHistoryWithHeaders: LiveData<List<TransactionListItem>> =
+        transactionsForCustomerFlow.map { transactions ->
+            groupTransactionsByDate(transactions)
+        }.asLiveData()
 
-    // --- LiveData for the UI ---
+    // --- Correctly call the analytics engine for all insights ---
+    val repaymentInsight: LiveData<String?> =
+        transactionsForCustomerFlow.map { transactions ->
+            CustomerAnalyticsEngine.predictRepaymentHabit(transactions)
+        }.asLiveData()
 
-    // <<< FIX 1: This LiveData transforms the raw list into a list with headers for the adapter >>>
-    val transactionHistoryWithHeaders: LiveData<List<TransactionListItem>> = rawTransactionHistory.map { transactions ->
-        groupTransactionsByDate(transactions)
-    }
+    val nextPurchaseInsight: LiveData<String?> =
+        transactionsForCustomerFlow.map { transactions ->
+            CustomerAnalyticsEngine.predictNextPurchase(transactions)
+        }.asLiveData()
 
-    // <<< FIX 2: This LiveData correctly uses the RAW list for analysis >>>
-    val repaymentInsight: LiveData<String?> = rawTransactionHistory.map { transactions ->
-        // The analytics engine gets the simple List<Transaction> it expects
-        CustomerAnalyticsEngine.predictRepaymentHabit(transactions)
-    }
+    val customerValueTag: LiveData<String?> =
+        transactionsForCustomerFlow.map { transactions ->
+            CustomerAnalyticsEngine.assignCustomerValueTag(transactions)
+        }.asLiveData()
 
 
-    // --- Helper Functions for Grouping (can be moved to a Util if shared) ---
+    // --- Helper Functions ---
     private fun groupTransactionsByDate(transactions: List<Transaction>): List<TransactionListItem> {
         if (transactions.isEmpty()) return emptyList()
 
@@ -61,6 +73,7 @@ class CustomerDetailViewModel(
                 isSameDay(transactionCal, yesterday) -> "دیروز"
                 else -> SimpleDateFormat("d MMMM yyyy", farsiLocale).format(Date(transaction.dateMillis))
             }
+
             if (dateString != lastHeader) {
                 groupedList.add(TransactionListItem.DateHeader(dateString))
                 lastHeader = dateString
@@ -76,8 +89,7 @@ class CustomerDetailViewModel(
     }
 }
 
-// --- Factory to pass the customerId to the ViewModel ---
-// This part is already correct and does not need to change.
+// --- Factory (Unchanged but included for completeness) ---
 class CustomerDetailViewModelFactory(
     private val application: Application,
     private val customerId: Long

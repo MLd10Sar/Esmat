@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,6 +57,22 @@ class SettingsFragment : Fragment() {
         setupClickListeners()
         setupObservers()
         displayBackupStatus()
+        loadCurrentDateFormat()
+        // Listen for changes
+        binding.rgDateFormat.setOnCheckedChangeListener { _, checkedId ->
+            val selectedFormat = if (checkedId == R.id.rbShamsi) "SHAMSI" else "GREGORIAN"
+            SettingsManager.saveDateFormat(requireContext(), selectedFormat)
+            // Optional: Show a toast to confirm
+            Toast.makeText(context, "Date format updated", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun loadCurrentDateFormat() {
+        val currentFormat = SettingsManager.getDateFormat(requireContext())
+        if (currentFormat == "SHAMSI") {
+            binding.rgDateFormat.check(R.id.rbShamsi)
+        } else {
+            binding.rgDateFormat.check(R.id.rbGregorian)
+        }
     }
 
     private fun displayBackupStatus() {
@@ -79,6 +96,14 @@ class SettingsFragment : Fragment() {
 
         binding.tvBackupData.setOnClickListener {
             showBackupOptionsDialog()
+        }
+        binding.tvEditShopInfo.setOnClickListener {
+            try {
+                findNavController().navigate(R.id.action_settingsFragment_to_shopInfoFragment)
+            } catch (e: Exception) {
+                Log.e("SettingsFragment", "Navigation to ShopInfoFragment failed. Check nav_graph.", e)
+                Toast.makeText(context, "Could not open shop info page.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.tvRestoreData.setOnClickListener {

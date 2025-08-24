@@ -117,6 +117,7 @@ class AddEditCustomerFragment : Fragment() {
         binding.switchCustomerActive.isChecked = customer.isActive
 
         // Set spinner selection
+        @Suppress("UNCHECKED_CAST")
         val typeAdapter = binding.spinnerCustomerType.adapter as? ArrayAdapter<String>
         if (typeAdapter != null && !customer.type.isNullOrBlank()) {
             val position = typeAdapter.getPosition(customer.type)

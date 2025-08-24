@@ -11,61 +11,174 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="8dp">
+        android:padding="8dp"> <!-- Reduced base padding for card margins -->
 
-        <!-- Change Password Row -->
+        <!-- Account Section -->
         <TextView
-            android:id="@+id/tvChangePassword"
-            style="@style/SettingsItemStyle"
-            android:text="تغییر رمز عبور"
-            app:drawableStartCompat="@drawable/ic_lock"
-            android:drawablePadding="16dp"/>
+            style="@style/SettingsHeader"
+            android:text="@string/settings_header_account" />
+        <com.google.android.material.card.MaterialCardView
+            style="@style/SettingsCardStyle">
+            <LinearLayout
+                android:id="@+id/tvChangePassword"
+                style="@style/SettingsCardRowStyle">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_lock"
+                    app:tint="?attr/colorPrimary"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="تغییر رمز عبور"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-        <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
-
-        <!-- Backup Data Row -->
+        <!-- Display & Business Section Card -->
         <TextView
-            android:id="@+id/tvBackupData"
-            style="@style/SettingsItemStyle"
-            android:text="تهیه نسخه پشتیبان (بکاپ)"
-            app:drawableStartCompat="@drawable/ic_backup"
-            android:drawablePadding="16dp"/>
+            style="@style/SettingsHeader"
+            android:text="عمومی" />
+        <com.google.android.material.card.MaterialCardView
+            style="@style/SettingsCardStyle">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <!-- Last Backup Status -->
+                <!-- Date Format Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="نمایش تاریخ"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"/>
+                    <RadioGroup
+                        android:id="@+id/rgDateFormat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+                        <RadioButton
+                            android:id="@+id/rbGregorian"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="میلادی"/>
+                        <RadioButton
+                            android:id="@+id/rbShamsi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="شمسی"/>
+                    </RadioGroup>
+                </LinearLayout>
+
+                <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
+
+                <!-- Shop Info Row -->
+                <LinearLayout
+                    android:id="@+id/tvEditShopInfo"
+                    style="@style/SettingsCardRowStyle">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_store"
+                        app:tint="?attr/colorPrimary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="ویرایش معلومات دکان"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"/>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Data & Support Section Card -->
         <TextView
-            android:id="@+id/tvLastBackupStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="12dp"
-            android:gravity="start"
-            android:textAppearance="?attr/textAppearanceCaption"
-            tools:text="آخرین بکاپ: امروز ساعت ۱۰ صبح"/>
+            style="@style/SettingsHeader"
+            android:text="معلومات و پشتیبانی" />
+        <com.google.android.material.card.MaterialCardView
+            style="@style/SettingsCardStyle">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
+                <!-- Backup Row -->
+                <LinearLayout
+                    android:id="@+id/tvBackupData"
+                    style="@style/SettingsCardRowStyle">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_backup"
+                        app:tint="?attr/colorPrimary"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="تهیه نسخه پشتیبان (بکاپ)"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"/>
+                        <TextView
+                            android:id="@+id/tvLastBackupStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?attr/textAppearanceCaption"
+                            tools:text="آخرین بکاپ: امروز"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
 
-        <!-- Restore Data Row -->
-        <TextView
-            android:id="@+id/tvRestoreData"
-            style="@style/SettingsItemStyle"
-            android:text="بازیابی اطلاعات از بکاپ"
-            app:drawableStartCompat="@drawable/ic_restore"
-            android:drawablePadding="16dp"/>
+                <!-- Restore Row -->
+                <LinearLayout
+                    android:id="@+id/tvRestoreData"
+                    style="@style/SettingsCardRowStyle">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_restore"
+                        app:tint="?attr/colorPrimary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="بازیابی اطلاعات از بکاپ"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"/>
+                </LinearLayout>
+                <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
 
-        <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
+                <!-- About Row -->
+                <LinearLayout
+                    android:id="@+id/tvAboutApp"
+                    style="@style/SettingsCardRowStyle">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_info"
+                        app:tint="?attr/colorPrimary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="@string/about_app_title"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"/>
+                </LinearLayout>
 
-
-
-        <!-- About App Row -->
-        <TextView
-            android:id="@+id/tvAboutApp"
-            style="@style/SettingsItemStyle"
-            android:text="@string/about_app_title"
-            app:drawableStartCompat="@drawable/ic_info"
-            android:drawablePadding="16dp"/>
-
-        <View style="@style/DashboardDivider" android:layout_marginHorizontal="16dp"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 </ScrollView>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Set the corner radius to be very large to create a pill shape -->
+    <corners android:radius="20dp" />
+
+    <!-- Set the background color. This is a semi-transparent version of your primary color -->
+    <solid android:color="#204A148C" />
+    <!-- The '20' at the start means ~12% opacity. You can change it.
+         '4A148C' is your deep purple color. -->
+</shape>
