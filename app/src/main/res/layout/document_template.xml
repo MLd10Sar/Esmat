@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/white"
+    android:layoutDirection="rtl">
+
+    <!-- Header Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <ImageView
+            android:id="@+id/imgShopLogo"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:visibility="gone"
+            tools:src="@mipmap/ic_launcher"
+            tools:visibility="visible"/>
+        <TextView
+            android:id="@+id/tvShopName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:textAppearance="?attr/textAppearanceHeadline5"
+            android:textColor="@android:color/black"
+            tools:text="دکان احمدی"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tvShopAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone"
+        tools:text="سرک اول، کابل"
+        tools:visibility="visible"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Document Title (e.g., "Receipt" or "Statement") -->
+    <TextView
+        android:id="@+id/tvDocumentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        tools:text="صورت حساب"/>
+
+    <!-- Customer Info -->
+    <LinearLayout
+        android:id="@+id/layoutCustomerInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="برای محترم:"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@android:color/darker_gray" />
+        <TextView
+            android:id="@+id/tvCustomerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="@android:color/black"
+            tools:text="احمد محمودی"/>
+        <TextView
+            android:id="@+id/tvDocumentDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@android:color/darker_gray"
+            tools:text="تاریخ: 2024/05/16"/>
+    </LinearLayout>
+
+    <!-- Transaction List Area -->
+    <TextView
+        android:id="@+id/tvTransactionListHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="معاملات:"
+        android:textAppearance="?attr/textAppearanceTitleSmall"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:id="@+id/layoutTransactionRows"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Total Section -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="16dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+        <TextView
+            android:id="@+id/tvTotalLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            tools:text="مجموع طلب باقی مانده"/>
+        <TextView
+            android:id="@+id/tvTotalAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            tools:text="3,500.00 AFN"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -23,6 +23,7 @@ class CustomerDetailViewModel(
 
     // --- LiveData Properties Exposed to the Fragment ---
     val customer: LiveData<Customer?> = repository.getCustomerById(customerId).asLiveData()
+    val allCustomers: LiveData<List<Customer>> = repository.getAllActiveCustomers().asLiveData()
 
     // Expose the raw list for the fragment to use in statement generation
     val transactionsForCustomer: LiveData<List<Transaction>> = transactionsForCustomerFlow.asLiveData()

@@ -1,36 +1,34 @@
 package com.example.roznamcha.ui.settings
 
-import android.app.Activity
-import android.content.Intent
-import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.roznamcha.SettingsManager
 import com.example.roznamcha.databinding.FragmentShopInfoBinding
 import java.io.File
+import java.io.FileOutputStream
+import android.graphics.BitmapFactory
 
 class ShopInfoFragment : Fragment() {
 
     private var _binding: FragmentShopInfoBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ShopInfoViewModel by viewModels {
-        ShopInfoViewModelFactory(requireActivity().application)
-    }
-
-    private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.data?.let { imageUri ->
-                binding.imgShopLogoPreview.setImageURI(imageUri) // Show preview
-                viewModel.saveShopLogo(imageUri) // Save logo in background
-            }
+    // Activity Result Launcher for picking a logo image from the gallery
+    private val logoPickerLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            // When an image is picked, save it and update the preview
+            saveLogo(it)
+            binding.imgShopLogoPreview.setImageURI(it)
         }
     }
 
@@ -41,37 +39,87 @@ class ShopInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         requireActivity().title = "معلومات دکان"
 
-        loadExistingInfo()
+        loadShopInfo()
+        setupClickListeners()
+    }
 
+    private fun setupClickListeners() {
         binding.btnUploadLogo.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
-            imagePickerLauncher.launch(intent)
+            // Launch the system's image picker
+            logoPickerLauncher.launch("image/*")
+        }
+        binding.imgShopLogoPreview.setOnClickListener {
+            // Also allow clicking the image itself to upload
+            logoPickerLauncher.launch("image/*")
         }
 
         binding.btnSaveShopInfo.setOnClickListener {
-            val name = binding.etShopName.text.toString().trim()
-            val address = binding.etShopAddress.text.toString().trim()
-            val phone = binding.etShopPhone.text.toString().trim()
-            if (name.isBlank()) {
-                Toast.makeText(context, "نام دکان الزامی است", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            viewModel.saveShopInfo(name, address, phone)
-            Toast.makeText(context, "معلومات ذخیره شد", Toast.LENGTH_SHORT).show()
-            findNavController().popBackStack()
+            saveAllInfo()
         }
     }
 
-    private fun loadExistingInfo() {
-        binding.etShopName.setText(SettingsManager.getShopName(requireContext()) ?: "")
-        binding.etShopAddress.setText(SettingsManager.getShopAddress(requireContext()) ?: "")
-        val logoFile = File(requireContext().filesDir, "shop_logo.png")
+    /**
+     * Loads existing shop info from SettingsManager and populates the form.
+     */
+    private fun loadShopInfo() {
+        val context = requireContext()
+        binding.etShopName.setText(SettingsManager.getShopName(context))
+        binding.etShopAddress.setText(SettingsManager.getShopAddress(context))
+        binding.etShopPhone.setText(SettingsManager.getShopPhone(context))
+
+        // Load and display the saved logo if it exists
+        val logoFile = File(context.filesDir, "shop_logo.png")
         if (logoFile.exists()) {
-            val bitmap = BitmapFactory.decodeFile(logoFile.absolutePath)
-            binding.imgShopLogoPreview.setImageBitmap(bitmap)
+            try {
+                val bitmap = BitmapFactory.decodeFile(logoFile.absolutePath)
+                binding.imgShopLogoPreview.setImageBitmap(bitmap)
+            } catch (e: Exception) {
+                Log.e("ShopInfoFragment", "Error loading existing logo", e)
+            }
         }
+    }
+
+    /**
+     * Saves the selected logo image URI to the app's private storage.
+     */
+    private fun saveLogo(uri: Uri) {
+        try {
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+            val logoFile = File(requireContext().filesDir, "shop_logo.png")
+            val outputStream = FileOutputStream(logoFile)
+            inputStream?.copyTo(outputStream)
+            inputStream?.close()
+            outputStream.close()
+            Toast.makeText(context, "لوگو با موفقیت انتخاب شد", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(context, "خطا در ذخیره کردن لوگو", Toast.LENGTH_SHORT).show()
+            Log.e("ShopInfoFragment", "Error saving logo", e)
+        }
+    }
+
+    /**
+     * Saves all the text fields to SettingsManager.
+     */
+    private fun saveAllInfo() {
+        val context = requireContext()
+        val shopName = binding.etShopName.text.toString().trim()
+
+        if (shopName.isBlank()) {
+            binding.tilShopName.error = "نام دکان الزامی است"
+            return
+        } else {
+            binding.tilShopName.error = null
+        }
+
+        SettingsManager.saveShopName(context, shopName)
+        SettingsManager.saveShopAddress(context, binding.etShopAddress.text.toString().trim())
+        SettingsManager.saveShopPhone(context, binding.etShopPhone.text.toString().trim())
+
+        Toast.makeText(context, "معلومات دکان با موفقیت ذخیره شد", Toast.LENGTH_SHORT).show()
+        findNavController().popBackStack() // Go back to settings screen
     }
 
     override fun onDestroyView() {

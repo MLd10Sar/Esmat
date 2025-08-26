@@ -3,4 +3,6 @@
     <cache-path
         name="shared_backups"
         path="." />
+    <cache-path name="shared_images" path="images/"/>
 </paths>
+

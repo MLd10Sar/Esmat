@@ -14,16 +14,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.example.roznamcha.R
 import com.example.roznamcha.SettingsManager
 import com.example.roznamcha.databinding.FragmentSettingsBinding
 import java.text.SimpleDateFormat
 import java.util.*
-import com.example.roznamcha.workers.ReminderWorker // Import the new worker
-import com.example.roznamcha.workers.SummaryWorker // Keep the old one
-
 
 class SettingsFragment : Fragment() {
 
@@ -34,7 +29,7 @@ class SettingsFragment : Fragment() {
         SettingsViewModelFactory(requireActivity().application)
     }
 
-    // This launcher is ONLY for selecting a file to RESTORE
+    // Launcher for selecting a backup file to RESTORE
     private val restoreLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -58,14 +53,14 @@ class SettingsFragment : Fragment() {
         setupObservers()
         displayBackupStatus()
         loadCurrentDateFormat()
-        // Listen for changes
+
         binding.rgDateFormat.setOnCheckedChangeListener { _, checkedId ->
             val selectedFormat = if (checkedId == R.id.rbShamsi) "SHAMSI" else "GREGORIAN"
             SettingsManager.saveDateFormat(requireContext(), selectedFormat)
-            // Optional: Show a toast to confirm
             Toast.makeText(context, "Date format updated", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun loadCurrentDateFormat() {
         val currentFormat = SettingsManager.getDateFormat(requireContext())
         if (currentFormat == "SHAMSI") {
@@ -93,10 +88,12 @@ class SettingsFragment : Fragment() {
         binding.tvAboutApp.setOnClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_aboutFragment)
         }
-
         binding.tvBackupData.setOnClickListener {
             showBackupOptionsDialog()
         }
+
+        // <<< THIS IS THE CORRECT LISTENER >>>
+        // It navigates to the dedicated ShopInfoFragment.
         binding.tvEditShopInfo.setOnClickListener {
             try {
                 findNavController().navigate(R.id.action_settingsFragment_to_shopInfoFragment)
@@ -109,26 +106,24 @@ class SettingsFragment : Fragment() {
         binding.tvRestoreData.setOnClickListener {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
-                type = "*/*" // Allow user to select the .enc file
+                type = "*/*"
             }
             restoreLauncher.launch(intent)
         }
     }
 
     private fun setupObservers() {
-        // Observer for when the encrypted file is ready to be shared
         viewModel.encryptedBackupReadyEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { fileUri ->
                 showShareOptions(fileUri)
+                displayBackupStatus() // Update the "Last backup" text after a successful backup
             }
         }
-
         viewModel.backupFailedEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 Toast.makeText(context, "خطا در ایجاد نسخه پشتیبان", Toast.LENGTH_SHORT).show()
             }
         }
-
         viewModel.restoreStatusEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { isSuccess ->
                 if (isSuccess) {
@@ -146,7 +141,6 @@ class SettingsFragment : Fragment() {
             .setTitle("تهیه نسخه پشتیبان (بکاپ)")
             .setMessage("فایل بکاپ شما رمزگذاری خواهد شد. لطفاً برای امنیت بیشتر، آنرا در یک مکان امن مانند ایمیل یا واتساپ تان ذخیره کنید.")
             .setPositiveButton("ادامه") { _, _ ->
-                // Tell the ViewModel to start creating the encrypted file
                 viewModel.createEncryptedBackup()
                 Toast.makeText(context, "در حال آماده سازی فایل بکاپ...", Toast.LENGTH_SHORT).show()
             }
@@ -156,11 +150,10 @@ class SettingsFragment : Fragment() {
 
     private fun showShareOptions(fileUri: Uri) {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "application/octet-stream" // Generic binary file type
+            type = "application/octet-stream"
             putExtra(Intent.EXTRA_STREAM, fileUri)
             putExtra(Intent.EXTRA_SUBJECT, "Roznamcha App Backup File")
             putExtra(Intent.EXTRA_TEXT, "This is your encrypted Roznamcha backup file. Keep it safe!")
-            // Grant read permission to the receiving app
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         startActivity(Intent.createChooser(shareIntent, "ارسال بکاپ از طریق..."))

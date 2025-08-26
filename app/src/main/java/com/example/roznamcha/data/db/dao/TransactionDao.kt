@@ -80,6 +80,15 @@ interface TransactionDao {
         ORDER BY isSettled ASC, dateMillis DESC
     """)
     fun getUnsettledDebtsList(queryPattern: String): Flow<List<Transaction>>
+    
+    // <<< ADD THIS QUERY >>>
+
+    @Query("""
+        SELECT SUM(remainingAmount) FROM transactions
+        WHERE customerId = :customerId AND isSettled = 0
+    """)
+    fun getOutstandingBalanceForCustomer(customerId: Long): Flow<Double?>
+
 
     // --- Customer-Specific Queries ---
     @Query("SELECT * FROM transactions WHERE customerId = :customerId ORDER BY dateMillis DESC")
@@ -88,8 +97,6 @@ interface TransactionDao {
     @Query("SELECT dateMillis FROM transactions WHERE customerId = :customerId ORDER BY dateMillis DESC LIMIT 1")
     fun getLastTransactionDateForCustomer(customerId: Long): Flow<Long?>
 
-    @Query("SELECT SUM(remainingAmount) FROM transactions WHERE customerId = :customerId AND isSettled = 0")
-    fun getOutstandingBalanceForCustomer(customerId: Long): Flow<Double?>
 
     // --- DASHBOARD TOTALS (ALL TIME) ---
     @Query("SELECT SUM(amount) FROM transactions WHERE category = :categoryName")

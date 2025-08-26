@@ -2,16 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- <<< ADD THIS NEW ITEM for Sharing the Statement >>> -->
+    <!-- <<< THIS IS THE ID WE NEED TO USE: action_share_statement >>> -->
     <item
         android:id="@+id/action_share_statement"
+        android:title="@string/send_bill_invoice"
         android:icon="@drawable/ic_share"
-        android:title="اشتراک صورت حساب"
-        app:showAsAction="ifRoom"/>
+    app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_edit_customer"
+        android:title="@string/edit"
         android:icon="@drawable/ic_edit"
-        android:title="ویرایش مشتری"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
+
 </menu>

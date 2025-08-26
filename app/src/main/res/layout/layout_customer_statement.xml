@@ -9,18 +9,43 @@
     android:background="@color/white"
     android:layoutDirection="rtl">
 
-    <!-- Header: Shop Branding & Title -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Header: Shop Branding & Title (USING A SIMPLE LINEARLAYOUT) -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/imgShopLogo"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            tools:src="@mipmap/ic_launcher"
+            tools:visibility="visible"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+            <TextView
+                android:id="@+id/tvShopNameStatement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:text=""/> <!-- No placeholder -->
+            <TextView
+                android:id="@+id/tvShopAddressStatement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#444444"
+                android:textSize="12sp"
+                android:text=""/> <!-- No placeholder -->
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvReceiptTitle"
@@ -29,36 +54,8 @@
             android:text="صورت حساب"
             android:textColor="@color/black"
             android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/tvShopNameStatement"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/tvReceiptTitle"
-            app:layout_constraintStart_toEndOf="@id/imgShopLogo"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text=""/> <!-- NO tools:text -->
-
-        <TextView
-            android:id="@+id/tvShopAddressStatement"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColor="#444444"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@id/tvShopNameStatement"
-            app:layout_constraintEnd_toEndOf="@id/tvShopNameStatement"
-            app:layout_constraintTop_toBottomOf="@id/tvShopNameStatement"
-            android:text=""/> <!-- NO tools:text -->
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textStyle="bold"/>
+    </LinearLayout>
 
     <View android:layout_width="match_parent" android:layout_height="2dp" android:background="#eee" android:layout_marginVertical="16dp"/>
 
@@ -79,7 +76,7 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="@color/black"
-            android:text=""/> <!-- NO tools:text -->
+            tools:text="احمد محمودی"/>
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -96,7 +93,7 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="@color/black"
-            android:text=""/> <!-- NO tools:text -->
+            tools:text="۱ سنبله ۱۴۰۴"/>
     </LinearLayout>
 
     <!-- Total Balance Card -->
@@ -125,7 +122,7 @@
                 android:textColor="@color/negative_red"
                 android:textSize="28sp"
                 android:textStyle="bold"
-                android:text=""/> <!-- NO tools:text -->
+                tools:text="27,299.00 AFN"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -138,6 +135,38 @@
         android:textColor="@color/black"
         android:textAppearance="?attr/textAppearanceTitleSmall"/>
 
+    <LinearLayout
+        android:id="@+id/layoutTableHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="تاریخ"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="شرح"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:gravity="end"
+            android:text="مبلغ باقی مانده"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
     <!-- Container for recent transaction rows -->
     <LinearLayout
         android:id="@+id/layoutRecentTransactions"
@@ -148,24 +177,13 @@
 
     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#eee" android:layout_marginVertical="16dp"/>
 
-    <!-- Footer with QR Code -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Footer -->
+    <TextView
+        android:id="@+id/tvFooterText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:gravity="center_vertical|bottom"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/tvFooterText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="تشکر از همکاری شما!"
-            android:textSize="12sp"
-            android:textColor="#555"/>
-        <ImageView
-            android:id="@+id/imgQrCode"
-            android:layout_width="80dp"
-            android:layout_height="80dp" />
-    </LinearLayout>
+        android:layout_gravity="center"
+        android:text="تشکر از همکاری شما!"
+        android:textColor="#555"
+        android:textSize="12sp"/>
 </LinearLayout>
