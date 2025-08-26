@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روزنامچه - اپلیکیشن حسابداری و مدیریت گدام</title>
-    <meta name="description" content="روزنامچه: اپلیکیشن آفلاین برای مدیریت فروش، خرید، گدام (انبار)، و حسابات مشتریان برای دکانداران و کسب و کارهای کوچک در افغانستان.">
+    <title>روزنامچه - اپلیکیشن حسابداری و مدیریت گدام برای کسب و کار شما</title>
+    <meta name="description" content="روزنامچه: اپلیکیشن آفلاین برای مدیریت فروش، خرید، گدام (انبار)، طلب و بدهی، و حسابات مشتریان برای دکانداران و کسب و کارهای کوچک در افغانستان.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,147 +24,161 @@
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Vazirmatn', sans-serif;
             background-color: var(--light-gray-bg);
-            /* Subtle background pattern for a premium feel */
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e0e0' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             color: var(--dark-text);
             margin: 0;
             padding: 0;
-            line-height: 1.7;
+            line-height: 1.8;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
             background-color: var(--card-bg);
-            box-shadow: 0 10px 50px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 60px rgba(0,0,0,0.08);
         }
 
         .header {
             text-align: center;
-            padding: 70px 20px;
-            background-color: var(--primary-color);
+            padding: 80px 20px;
+            background: linear-gradient(135deg, var(--primary-color), #6A1B9A);
             color: var(--light-text);
         }
 
         h1 {
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             margin: 0;
             font-weight: 800;
-            letter-spacing: -1px;
         }
 
         .header p {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             opacity: 0.9;
             margin-top: 10px;
             font-weight: 400;
         }
 
         .content {
-            padding: 40px 30px;
+            padding: 50px 40px;
         }
 
         .section-title {
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: var(--primary-color);
             text-align: center;
-            margin: 0 0 30px 0;
+            margin: 0 0 40px 0;
             font-weight: 700;
         }
 
-        .features-grid {
+        /* NEW: Feature Showcase with Icons */
+        .feature-showcase {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
             margin-top: 20px;
         }
 
-        .feature-item {
-            padding: 25px;
-            border-radius: var(--border-radius);
-            border-top: 4px solid var(--secondary-color);
+        .feature-card {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
             background-color: #f8f9fa;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            border-bottom: 5px solid transparent;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
-        .feature-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            border-bottom-color: var(--secondary-color);
         }
 
-        .feature-item h3 {
-            margin-top: 0;
+        .feature-card .icon {
+            font-size: 3rem; /* Emojis will inherit this size */
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            margin: 0 0 10px 0;
             color: var(--primary-color);
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 700;
         }
 
-        .feature-item p {
+        .feature-card p {
             font-size: 1rem;
             color: #555;
             margin-bottom: 0;
+            flex-grow: 1;
         }
 
         .download-section {
-            padding: 50px 20px;
+            padding: 60px 20px;
             text-align: center;
             background-color: var(--light-gray-bg);
         }
 
         .download-button {
             display: inline-block;
-            background: var(--secondary-color);
+            background: linear-gradient(45deg, var(--secondary-color), #009688);
             color: var(--light-text);
-            padding: 18px 35px;
+            padding: 20px 40px;
             border-radius: 50px;
             text-decoration: none;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0, 185, 165, 0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 191, 165, 0.4);
         }
 
         .download-button:hover {
-            transform: translateY(-3px) scale(1.03);
-            box-shadow: 0 8px 25px rgba(0, 185, 165, 0.4);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 191, 165, 0.6);
         }
 
         .install-steps {
             font-size: 1rem;
             color: #666;
-            margin-top: 20px;
+            margin-top: 25px;
             line-height: 1.8;
         }
 
-        .contact-section {
+        .contact-section { /* Renamed for clarity */
             text-align: center;
             padding: 50px 20px;
+            background-color: #e9ecef;
         }
 
         .contact-section h3 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: var(--dark-text);
-            margin: 0 0 10px 0;
+            margin: 0 0 15px 0;
             font-weight: 500;
+        }
+
+        .contact-section p {
+             margin-bottom: 15px;
         }
 
         .contact-section a {
             color: var(--primary-color);
             font-weight: 700;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             text-decoration: none;
             display: inline-block;
-            direction: ltr; /* <<< FIX for phone number rendering */
+            direction: ltr;
         }
 
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: 25px;
             font-size: 0.9rem;
             color: #888;
-            background-color: #e9ecef;
+            background-color: var(--dark-text);
+            color: #ccc;
         }
 
     </style>
@@ -174,33 +188,52 @@
 <div class="container">
     <div class="header">
         <h1>روزنامچه</h1>
-        <p>کتاب حسابات و گدام دیجیتالی شما</p>
+        <p>دستیار هوشمند برای مدیریت دکان شما</p>
     </div>
 
     <div class="content">
-        <h2 class="section-title">یک راه حل ساده برای مشکلات بزرگ</h2>
-        <div class="features-grid">
-            <div class="feature-item">
+        <h2 class="section-title">تمام ابزارهای مورد نیاز شما در یک برنامه</h2>
+
+        <div class="feature-showcase">
+            <div class="feature-card">
+                <div class="icon">📈</div>
+                <h3>داشبورد زنده با فلتر تاریخ</h3>
+                <p>مفاد و ضرر تان را برای امروز، این هفته، یا این ماه ببینید. تمام حسابات بصورت زنده آپدیت میشود.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📦</div>
                 <h3>مدیریت هوشمند گدام</h3>
-                <p>با هر خرید و فروش، موجودی اجناس تان بطور دقیق و خودکار آپدیت میشود.</p>
+                <p>با هر خرید و فروش، موجودی اجناس شما خود به خود و بطور دقیق کم و زیاد میشود.</p>
             </div>
-            <div class="feature-item">
-                <h3>حسابات شفاف</h3>
-                <p>مفاد و ضرر، طلب و بدهی، و پول نقد تان را در یک نگاه ببینید.</p>
+            <div class="feature-card">
+                <div class="icon">👥</div>
+                <h3>حساب کامل مشتریان</h3>
+                <p>تمام طلب و بدهی مشتریان را مدیریت کنید. پرداخت های قسمی را ثبت کرده و صورت حساب مسلکی ارسال کنید.</p>
             </div>
-            <div class="feature-item">
-                <h3>آفلاین، امن، و سریع</h3>
-                <p>بدون نیاز به انترنت، تمام معلومات شما با قفل رمز همیشه در جیب شماست.</p>
+            <div class="feature-card">
+                <div class="icon">🔔</div>
+                <h3>یادآوری های هوشمند</h3>
+                <p>برنامه بطور خودکار به شما از قرضداری های پرداخت نشده و خلاصه کار و بار روزمره تان خبر میدهد.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🛡️</div>
+                <h3>آفلاین، امن، و با بکاپ</h3>
+                <p>بدون نیاز به انترنت کار میکند، با قفل رمز امن است، و میتوانید از معلومات تان به آسانی بکاپ بگیرید.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🧾</div>
+                <h3>ارسال بل مسلکی</h3>
+                <p>برای مشتریان تان بل های زیبا و مسلکی با لوگوی دکان تان از طریق واتساپ ارسال کنید.</p>
             </div>
         </div>
     </div>
 
     <div id="download" class="download-section">
         <h2 class="section-title">همین حالا شروع کنید</h2>
-        <p style="margin-bottom: 30px;">برای شروع، دکمه سبز رنگ زیر را فشار دهید تا برنامه مستقیماً دانلود شود.</p>
+        <p style="margin-bottom: 30px;">برنامه را دانلود کرده و تا ۱۵ معامله را بطور رایگان امتحان کنید!</p>
 
         <a href="https://github.com/MLd10Sar/Esmat/releases/download/v1.0.0/app-release.apk" class="download-button">
-            دانلود مستقیم اپلیکیشن
+            دانلود مستقیم اپلیکیشن (APK)
         </a>
 
         <p class="install-steps">
