@@ -23,6 +23,7 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
+import androidx.core.graphics.createBitmap
 
 object DocumentGenerator {
 
@@ -88,14 +89,15 @@ object DocumentGenerator {
 
         // Dynamically add rows for unsettled transactions
         layoutTransactionRows.removeAllViews()
-        val unsettledTransactions = transactions.filter { !it.isSettled }.take(20) // Limit for image size
+        val unsettledTransactions = transactions.filter { !it.isSettled }.take(20)
         if (unsettledTransactions.isEmpty()) {
             val tv = TextView(context).apply { text = "معامله باقی مانده وجود ندارد." }
             layoutTransactionRows.addView(tv)
         } else {
             unsettledTransactions.forEach { transaction ->
                 val row = LayoutInflater.from(context).inflate(R.layout.list_item_invoice_row, layoutTransactionRows, false)
-                addTransactionRow(row, transaction)
+                // <<< USE THE CORRECTED addTransactionRow FUNCTION >>>
+                addTransactionRow(context, row, transaction)
                 layoutTransactionRows.addView(row)
             }
         }
@@ -116,12 +118,15 @@ object DocumentGenerator {
         // Add the single transaction row
         layoutTransactionRows.removeAllViews()
         val row = LayoutInflater.from(context).inflate(R.layout.list_item_invoice_row, layoutTransactionRows, false)
-        addTransactionRow(row, transaction)
+        // <<< USE THE CORRECTED addTransactionRow FUNCTION >>>
+        addTransactionRow(context, row, transaction)
         layoutTransactionRows.addView(row)
     }
 
-    private fun addTransactionRow(row: View, transaction: Transaction) {
-        row.findViewById<TextView>(R.id.tvRowDate).text = SimpleDateFormat("yy/MM/dd", Locale.US).format(Date(transaction.dateMillis))
+    private fun addTransactionRow(context: Context, row: View, transaction: Transaction) {
+        // <<< THE FIX IS HERE: USE DateUtils.formatMillis >>>
+        row.findViewById<TextView>(R.id.tvRowDate).text = DateUtils.formatMillis(context, transaction.dateMillis)
+
         row.findViewById<TextView>(R.id.tvRowDescription).text = transaction.description
         val amountToFormat = transaction.remainingAmount ?: transaction.amount ?: 0.0
         val formattedAmount = String.format(Locale.US, "%,.2f", amountToFormat)
@@ -143,7 +148,9 @@ object DocumentGenerator {
 
         layoutCustomerInfo.isVisible = customer != null
         tvCustomerName.text = customer?.name ?: ""
-        tvDocumentDate.text = "تاریخ: ${SimpleDateFormat("yyyy/MM/dd", Locale.US).format(Date())}"
+
+        // <<< THE FIX IS HERE: USE DateUtils.formatMillis >>>
+        tvDocumentDate.text = "تاریخ: ${DateUtils.formatMillis(context, System.currentTimeMillis())}"
 
         val logoFile = File(context.filesDir, "shop_logo.png")
         if (logoFile.exists()) {
@@ -160,7 +167,7 @@ object DocumentGenerator {
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
             )
             view.layout(0, 0, view.measuredWidth, view.measuredHeight)
-            val bitmap = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
+            val bitmap = createBitmap(view.measuredWidth, view.measuredHeight)
             val canvas = Canvas(bitmap)
             view.draw(canvas)
             bitmap

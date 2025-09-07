@@ -1,5 +1,6 @@
 package com.example.roznamcha.ui.customer
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -31,6 +32,7 @@ import com.example.roznamcha.databinding.FragmentCustomerDetailBinding
 import com.example.roznamcha.ui.list.OnTransactionClickListener
 import com.example.roznamcha.ui.list.TransactionAdapter
 import com.example.roznamcha.ui.list.TransactionListItem
+import com.example.roznamcha.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -65,6 +67,7 @@ class CustomerDetailFragment : Fragment(), OnTransactionClickListener {
         currencySymbol = SettingsManager.getCurrency(requireContext()) ?: "AFN"
         setupMenu()
         setupRecyclerView()
+        setupClickListeners()
         setupObservers()
     }
 
@@ -153,6 +156,7 @@ class CustomerDetailFragment : Fragment(), OnTransactionClickListener {
 
     // --- OnTransactionClickListener Implementation ---
     override fun onTransactionClick(transaction: Transaction) {
+        // This is correct
         val action = CustomerDetailFragmentDirections.actionGlobalAddEditTransactionFragment(
             category = transaction.category,
             transactionId = transaction.id
@@ -168,9 +172,87 @@ class CustomerDetailFragment : Fragment(), OnTransactionClickListener {
     override fun onSettleClick(transaction: Transaction) {
         Toast.makeText(context, "برای تصفیه حساب به لیست عمومی طلب/بدهی بروید.", Toast.LENGTH_SHORT).show()
     }
+    override fun onShareReminderClick(transaction: Transaction, customer: Customer?) {
+        // On this screen, the user should share the full statement, not a single reminder.
+        // We can just show a helpful message.
+        Toast.makeText(context, "برای ارسال صورت حساب، از آیکن اشتراک گذاری در بالای صفحه و برای ارسال صورت حساب از آیکن ارسال پیام یادآوری استفاده کنید.", Toast.LENGTH_LONG).show()
+    }
 
     override fun onShareClick(transaction: Transaction) {
         shareSingleTransactionAsText(transaction)
+    }
+
+    private fun setupClickListeners() {
+        binding.btnSendReminder.setOnClickListener {
+            val customer = viewModel.customer.value
+            if (customer == null || customer.contactInfo.isNullOrBlank()) {
+                Toast.makeText(context, "نمبر تماس برای این مشتری ثبت نشده است.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            // Check if the balance is a receivable (positive)
+            if ((viewModel.currentBalance.value ?: 0.0) > 0) {
+                showLanguageSelectionDialog(customer, viewModel.currentBalance.value!!)
+            } else {
+                Toast.makeText(context, "این مشتری از شما طلبکار نیست.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    // <<< ADD these new helper functions to CustomerDetailFragment.kt >>>
+
+    private fun showLanguageSelectionDialog(customer: Customer, balance: Double) {
+        val languageOptions = arrayOf("دری", "پښتو")
+        AlertDialog.Builder(requireContext())
+            .setTitle("انتخاب زبان پیام")
+            .setItems(languageOptions) { _, which ->
+                val language = if (which == 0) "DARI" else "PASHTO"
+                val message = generateBalanceReminderMessage(language, customer, balance)
+                launchWhatsApp(customer.contactInfo!!, message)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+    private fun launchWhatsApp(contactNumber: String, message: String) {
+        // Sanitize the phone number
+        var whatsappNumber = contactNumber.replace(" ", "").replace("+", "")
+        if (whatsappNumber.startsWith("0")) {
+            whatsappNumber = whatsappNumber.substring(1) // Remove leading 0
+        }
+        if (!whatsappNumber.startsWith("93")) {
+            whatsappNumber = "93$whatsappNumber"
+        }
+
+        try {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                val url = "https://api.whatsapp.com/send?phone=$whatsappNumber&text=${Uri.encode(message)}"
+                data = Uri.parse(url)
+                setPackage("com.whatsapp")
+            }
+            startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(context, "واتساپ در موبایل شما نصب نیست.", Toast.LENGTH_LONG).show()
+        }
+    }
+
+
+    private fun generateBalanceReminderMessage(language: String, customer: Customer, balance: Double): String {
+        val context = requireContext()
+        val shopName = SettingsManager.getShopName(context) ?: getString(R.string.app_name)
+        val formattedBalance = String.format(Locale.US, "%,.2f %s", balance, currencySymbol)
+
+        // Similar logic to the other reminder, but for the total balance
+        return if (language == "DARI") {
+            """
+            *سلام علیکم محترم ${customer.name}،*
+            یک یادآوری دوستانه از طرف ${shopName}. مجموع حساب باقی مانده شما مبلغ *${formattedBalance}* طلب میباشد.
+            تشکر!
+            """.trimIndent()
+        } else { // PASHTO
+            """
+            *السلام علیکم محترم ${customer.name}،*
+            د ${shopName} له خوا یو دوستانه یادښت. ستاسو مجموعي پاتې حساب *${formattedBalance}* طلب دی.
+            مننه!
+            """.trimIndent()
+        }
     }
 
     // --- Helper Functions ---
@@ -245,7 +327,7 @@ class CustomerDetailFragment : Fragment(), OnTransactionClickListener {
         tvShopAddress.isVisible = !shopAddress.isNullOrBlank()
         tvShopAddress.text = shopAddress
         tvCustomerName.text = customer.name
-        tvStatementDate.text = "تاریخ: ${SimpleDateFormat("yyyy/MM/dd", Locale.US).format(Date())}"
+        tvStatementDate.text = "تاریخ: ${DateUtils.formatMillis(context, System.currentTimeMillis())}"
         tvTotalBalance.text = String.format(Locale.US, "%,.2f %s", abs(balance), currencySymbol)
 
         val logoFile = File(context.filesDir, "shop_logo.png")
@@ -274,7 +356,7 @@ class CustomerDetailFragment : Fragment(), OnTransactionClickListener {
         } else {
             unsettledTransactions.forEach { transaction ->
                 val row = LayoutInflater.from(context).inflate(R.layout.list_item_invoice_row, layoutTransactionRows, false)
-                row.findViewById<TextView>(R.id.tvRowDate).text = SimpleDateFormat("yy/MM/dd", Locale.US).format(Date(transaction.dateMillis))
+                row.findViewById<TextView>(R.id.tvRowDate).text = DateUtils.formatMillis(context, transaction.dateMillis)
                 row.findViewById<TextView>(R.id.tvRowDescription).text = transaction.description
                 val amountToFormat = transaction.remainingAmount ?: transaction.amount ?: 0.0
                 val formattedAmount = String.format(Locale.US, "%,.2f", amountToFormat)

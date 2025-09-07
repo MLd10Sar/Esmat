@@ -5,7 +5,6 @@ import com.example.roznamcha.SettingsManager
 import com.example.roznamcha.data.db.dao.CustomerDao
 import com.example.roznamcha.data.db.dao.InventoryItemDao
 import com.example.roznamcha.data.db.dao.TransactionDao
-// <<< CORRECTED IMPORTS: Point to the 'entity' package for data classes >>>
 import com.example.roznamcha.data.db.entity.*
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +16,7 @@ class TransactionRepository(
     private val inventoryItemDao: InventoryItemDao,
     private val customerDao: CustomerDao
 ) {
+
 
     // --- Transaction Methods ---
     suspend fun insert(transaction: Transaction) {
@@ -44,6 +44,21 @@ class TransactionRepository(
     fun getUnsettledReceivablesList(query: String): Flow<List<Transaction>> {
         val queryPattern = "%${query}%"
         return transactionDao.getUnsettledReceivablesList(queryPattern)
+    }
+
+    fun getDirectPaidSalesTotalForRange(startDate: Int, endDate: Int): Flow<Double?> {
+        return transactionDao.getDirectPaidSalesTotalForRange(startDate, endDate)
+    }
+    fun getDirectPaidSalesTotal(): Flow<Double?> {
+        return transactionDao.getDirectPaidSalesTotal()
+    }
+    // --- NEW REPO METHODS for COGS ---
+    fun getTotalCostOfGoodsSold(): Flow<Double?> {
+        return transactionDao.getTotalCostOfGoodsSold()
+    }
+
+    fun getCostOfGoodsSoldForRange(startDate: Long, endDate: Long): Flow<Double?> {
+        return transactionDao.getCostOfGoodsSoldForRange(startDate, endDate)
     }
     fun getUnsettledDebtsList(query: String): Flow<List<Transaction>> {
         val queryPattern = "%${query}%"
@@ -116,4 +131,5 @@ class TransactionRepository(
     fun getTransactionHistoryForCustomer(customerId: Long): Flow<List<Transaction>> {
         return transactionDao.getTransactionHistoryForCustomer(customerId)
     }
+
 }

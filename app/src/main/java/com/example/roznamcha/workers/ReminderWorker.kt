@@ -19,9 +19,6 @@ import com.example.roznamcha.R
 import com.example.roznamcha.TransactionCategory
 import com.example.roznamcha.data.TransactionRepository
 import com.example.roznamcha.AppDatabase
-import com.example.roznamcha.data.db.dao.CustomerDao
-import com.example.roznamcha.data.db.dao.InventoryItemDao
-import com.example.roznamcha.data.db.dao.TransactionDao
 import java.util.Calendar
 
 class ReminderWorker(

@@ -29,5 +29,6 @@ data class Transaction(
     val paymentStatus: String?,     // <<< ADDED: e.g., "PAID", "DUE"
     val customerId: Long?, var isSettled: Boolean = false, //default to false, var so it can be updated.
     // this applies mainly to DEBT and RECEIVABLE categories
-    val linkedInventoryItemId: Long? = null
+    val linkedInventoryItemId: Long? = null,
+    val costOfGoodsSold: Double? = null
 )

@@ -1,5 +1,7 @@
 package com.example.roznamcha.ui.dashboard
 
+import android.R.attr.end
+import android.R.attr.start
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,7 +35,6 @@ class DashboardViewModel(
             else repository.getTotalForCategoryInRange(categoryName, start, end)
         }.map { it ?: 0.0 }
     }
-
     private fun createRangedTotalByStatusFlow(categoryName: String, status: String): Flow<Double> {
         return _dateRange.flatMapLatest { range ->
             val (start, end) = range.getTimestamps()
@@ -41,6 +42,7 @@ class DashboardViewModel(
             else repository.getTotalAmountByCategoryAndStatusForRange(categoryName, status, start, end)
         }.map { it ?: 0.0 }
     }
+
 
     private fun createRangedUnsettledTotalFlow(categoryName: String): Flow<Double> {
         return _dateRange.flatMapLatest { range ->
@@ -50,6 +52,11 @@ class DashboardViewModel(
         }.map { it ?: 0.0 }
     }
 
+    // --- NEW: Create StateFlows for the settlement transactions ---
+    private val receivableSettlements: StateFlow<Double> = createRangedTotalFlow(TransactionCategory.RECEIVABLE_SETTLEMENT.name)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+    private val debtSettlements: StateFlow<Double> = createRangedTotalFlow(TransactionCategory.DEBT_SETTLEMENT.name)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
     // --- SOURCE FLOWS (All are now date-aware) ---
     val totalSales: StateFlow<Double> = createRangedTotalFlow(TransactionCategory.SALE.name)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
@@ -62,8 +69,12 @@ class DashboardViewModel(
     val totalSalaries: StateFlow<Double> = createRangedTotalFlow(TransactionCategory.SALARY.name)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
 
-    private val paidSales: StateFlow<Double> = createRangedTotalByStatusFlow(TransactionCategory.SALE.name, PaymentStatus.PAID.name)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+    private val paidSales: StateFlow<Double> =
+        _dateRange.flatMapLatest { range ->
+            // We need to create a date-ranged version of the new query too
+            repository.getDirectPaidSalesTotalForRange(start, end)
+        }.map { it ?: 0.0 }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+
     private val paidPurchases: StateFlow<Double> = createRangedTotalByStatusFlow(TransactionCategory.PURCHASE.name, PaymentStatus.PAID.name)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
     private val unsettledSales: StateFlow<Double> = createRangedTotalByStatusFlow(TransactionCategory.SALE.name, PaymentStatus.DUE.name)
@@ -73,14 +84,26 @@ class DashboardViewModel(
     private val unsettledPureReceivables: StateFlow<Double> = createRangedUnsettledTotalFlow(TransactionCategory.RECEIVABLE.name)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
 
+    val totalCostOfGoodsSold: StateFlow<Double> =
+        _dateRange.flatMapLatest { range ->
+            val (start, end) = range.getTimestamps()
+            if (range == DateRange.ALL_TIME) repository.getTotalCostOfGoodsSold()
+            else repository.getCostOfGoodsSoldForRange(start, end)
+        }.map { it ?: 0.0 }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+
+
     // --- DERIVED FLOWS (Calculated from other flows) ---
     val totalOperationalExpenses: StateFlow<Double> = combine(totalRent, totalOtherExpenses, totalSalaries) { rent, other, salary ->
         rent + other + salary
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
-
-    val netProfitOrLoss: StateFlow<Double> = combine(totalSales, totalPurchases, totalOperationalExpenses) { sales, purchases, expenses ->
-        sales - purchases - expenses
+    val netProfitOrLoss: StateFlow<Double> = combine(
+        totalSales,
+        totalCostOfGoodsSold,
+        totalOperationalExpenses
+    ) { sales, cogs, expenses ->
+        sales - cogs - expenses // The new, correct formula
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+
 
     val totalDebtsDisplay: StateFlow<Double> =
         _dateRange.flatMapLatest { range ->
@@ -102,23 +125,34 @@ class DashboardViewModel(
 
     // <<< THIS IS THE CORRECTED BLOCK >>>
     val cashOnHand: StateFlow<Double> = combine(
-        mainAsset, paidSales, unsettledPureDebts, paidPurchases,
-        unsettledPureReceivables, totalRent, totalOtherExpenses, totalSalaries
+        mainAsset,
+        paidSales,              // Cash IN from direct cash sales
+        receivableSettlements,  // Cash IN from settling previous credit sales
+        unsettledPureDebts,     // Cash IN from pure cash loans received
+        paidPurchases,          // Cash OUT from direct cash purchases
+        debtSettlements,        // Cash OUT from settling previous credit purchases
+        unsettledPureReceivables, // Cash OUT from pure cash loans given
+        totalRent,
+        totalOtherExpenses,
+        totalSalaries
     ) { values ->
         // Access the elements of the 'values' array by their index
-        val asset         = values[0]
-        val pSales        = values[1]
-        val unDebts       = values[2]
-        val pPurchases    = values[3]
-        val unReceivables = values[4]
-        val rent          = values[5]
-        val otherExp      = values[6]
-        val salaries      = values[7]
+        val asset           = values[0]
+        val pSales          = values[1]
+        val rSettlements    = values[2]
+        val unDebts         = values[3]
+        val pPurchases      = values[4]
+        val dSettlements    = values[5]
+        val unReceivables   = values[6]
+        val rent            = values[7]
+        val otherExp        = values[8]
+        val salaries        = values[9]
 
         // Perform the calculation
-        (asset + pSales + unDebts) - (pPurchases + unReceivables + rent + otherExp + salaries)
+        val totalCashIn = asset + pSales + rSettlements + unDebts
+        val totalCashOut = pPurchases + dSettlements + unReceivables + rent + otherExp + salaries
+        totalCashIn - totalCashOut
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
-
 
     // --- Initialization & Public Methods ---
     init {
