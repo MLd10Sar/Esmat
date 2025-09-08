@@ -3,172 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روزنامچه - از سردرگمی تا شفافیت</title>
-    <meta name="description" content="روزنامچه: اپلیکیشن آفلاین برای مدیریت فروش، خرید، و حسابات برای دکانداران در افغانستان.">
+    <title>روزنامچه - دستیار هوشمند کسب و کار شما</title>
+    <meta name="description" content="روزنامچه: اپلیکیشن آفلاین برای مدیریت فروش، خرید، گدام (انبار)، و حسابات مشتریان برای دکانداران و کسب و کارهای کوچک در افغانستان.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --primary-color: #4A148C;
+            --secondary-color: #00BFA5;
+            --background-color: #ffffff;
+            --dark-text: #212529;
+            --light-text: #ffffff;
+            --muted-text: #6c757d;
+        }
+
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
             font-family: 'Vazirmatn', sans-serif;
-            overflow: hidden; /* Prevents scrolling for this layout */
+            overflow: hidden; /* Prevents scrolling on the body itself */
         }
 
         .split-container {
             display: flex;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
         }
 
-        .panel {
-            width: 50%;
-            height: 100%;
-            padding: 5vw;
-            box-sizing: border-box;
+        .left-pane {
+            background-color: var(--primary-color);
+            width: 45%;
+            color: var(--light-text);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            transition: width 0.5s ease;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+            box-sizing: border-box;
         }
 
-        .panel-left {
-            background-color: #212529; /* Dark background for "Problem" */
-            color: #f8f9fa;
-        }
-
-        .panel-right {
-            background-color: #ffffff; /* Light background for "Solution" */
-            color: #212529;
+        .right-pane {
+            background-color: var(--background-color);
+            width: 55%;
+            padding: 50px;
+            box-sizing: border-box;
+            overflow-y: auto; /* Allows only this side to scroll if needed */
         }
 
         h1 {
-            font-size: 4vw;
+            font-size: 8vw; /* Scales with screen width */
             font-weight: 900;
-            margin: 0 0 15px 0;
-            line-height: 1.2;
+            writing-mode: vertical-rl; /* Vertical text */
+            transform: rotate(180deg); /* Corrects orientation for Persian */
+            line-height: 1;
+            margin: 0;
         }
 
-        .panel-left h1 {
-            color: #6c757d; /* Muted gray for the problem */
-        }
-
-        .panel-right h1 {
-            color: #4A148C; /* Vibrant Purple for the solution */
-        }
-
-        p {
-            font-size: 1.2vw;
-            color: #adb5bd; /* Lighter gray for problem description */
-            margin: 0 0 30px 0;
-        }
-
-        .panel-right p {
-            color: #495057; /* Darker gray for solution description */
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 40px 0;
-        }
-
-        li {
-            font-size: 1.3vw;
-            margin-bottom: 15px;
-            text-decoration: line-through; /* Strikethrough for problems */
-            color: #6c757d;
-        }
-
-        .panel-right li {
-            text-decoration: none; /* No strikethrough for solutions */
-            color: #212529;
-            font-weight: 700;
-        }
-
-        .panel-right li::before {
-            content: '✓';
-            color: #00BFA5; /* Teal checkmark */
-            margin-left: 10px;
-            font-weight: bold;
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.8;
+            margin-top: 20px;
         }
 
         .download-button {
             display: inline-block;
-            background: linear-gradient(45deg, #00BFA5, #009688);
-            color: #fff;
-            padding: 20px 40px;
+            background: var(--secondary-color);
+            color: var(--light-text);
+            padding: 18px 35px;
             border-radius: 50px;
             text-decoration: none;
-            font-size: 1.5vw;
+            font-size: 1.4rem;
             font-weight: 700;
             transition: all 0.3s ease;
-            text-align: center;
-            border: none;
-            align-self: flex-start; /* Align button to the start of the flex container */
+            margin-top: 40px;
+            border: 2px solid var(--secondary-color);
         }
 
         .download-button:hover {
+            background-color: transparent;
+            color: var(--secondary-color);
             transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 191, 165, 0.4);
         }
 
-        .app-name {
-            font-size: 5vw;
-            font-weight: 900;
-            color: #4A148C;
+        .right-pane h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-weight: 700;
         }
 
-        /* Responsive adjustments for mobile */
-        @media (max-width: 768px) {
+        .feature-item {
+            margin-bottom: 25px;
+        }
+
+        .feature-item h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-item h3::before {
+            content: '✓';
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            margin-left: 10px;
+        }
+
+        .feature-item p {
+            margin: 0 0 0 30px; /* Indent the description */
+            font-size: 1rem;
+            color: var(--muted-text);
+        }
+
+        .contact-link {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-decoration: none;
+            display: block;
+            direction: ltr;
+            margin-top: 10px;
+        }
+
+        /* Responsive design for mobile */
+        @media (max-width: 800px) {
             .split-container {
-                flex-direction: column; /* Stack vertically */
+                flex-direction: column;
                 height: auto;
             }
-            .panel {
+            .left-pane, .right-pane {
                 width: 100%;
-                height: 100vh; /* Make each panel take the full screen height */
-                justify-content: center;
-                text-align: center;
+                height: auto;
             }
-            h1, .app-name { font-size: 12vw; }
-            p { font-size: 4vw; }
-            li { font-size: 4.5vw; }
-            .download-button { font-size: 5vw; align-self: center; }
+            .left-pane {
+                padding: 60px 20px;
+            }
+            h1 {
+                writing-mode: horizontal-tb; /* Horizontal text on mobile */
+                transform: none;
+                font-size: 3.5rem;
+            }
+            .right-pane {
+                padding: 40px 20px;
+            }
         }
-
     </style>
 </head>
 <body>
 
 <div class="split-container">
-    <div class="panel panel-left">
-        <h1>حساب و کتاب سنتی</h1>
-        <p>آیا از مشکلات روزمره حسابداری دستی خسته شده اید؟</p>
-        <ul>
-            <li>حسابات گُم شده</li>
-            <li>قرضداری های نامعلوم</li>
-            <li>مصارف نامرتب</li>
-            <li>ندانستن مفاد واقعی</li>
-        </ul>
-    </div>
-    <div class="panel panel-right">
-        <div class="app-name">روزنامچه</div>
-        <h1>شفافیت در کسب و کار شما</h1>
-        <p>دستیار هوشمند و آفلاین شما برای مدیریت تمام امور مالی و گدام.</p>
-        <ul>
-            <li>گدام هوشمند و خودکار</li>
-            <li>مدیریت طلب و بدهی</li>
-            <li>گزارش مفاد و ضرر آنی</li>
-            <li>امنیت کامل معلومات</li>
-        </ul>
+    <div class="left-pane">
+        <h1>روزنامچه</h1>
+        <p class="tagline">دستیار هوشمند کسب و کار شما</p>
         <a href="https://github.com/MLd10Sar/Esmat/releases/download/v1.0.0/app-release.apk" class="download-button">
             دانلود مستقیم
         </a>
+    </div>
+
+    <div class="right-pane">
+        <h2>تمام حسابات در کنترول شما. همیشه و همه جا.</h2>
+
+        <div class="feature-item">
+            <h3>مدیریت هوشمند گدام</h3>
+            <p>با هر خرید و فروش، موجودی اجناس تان بطور دقیق و خودکار آپدیت میشود.</p>
+        </div>
+
+        <div class="feature-item">
+            <h3>حساب کامل مشتریان</h3>
+            <p>تمام طلب و بدهی مشتریان را مدیریت کنید، پرداخت های قسمی را ثبت کرده و صورت حساب مسلکی ارسال کنید.</p>
+        </div>
+
+        <div class="feature-item">
+            <h3>داشبورد زنده با فلتر تاریخ</h3>
+            <p>مفاد و ضرر تان را برای امروز، این هفته، یا این ماه ببینید. تمام حسابات بصورت زنده آپدیت میشود.</p>
+        </div>
+
+        <div class="feature-item">
+            <h3>یادآوری های هوشمند</h3>
+            <p>برنامه بطور خودکار به شما از قرضداری های پرداخت نشده و خلاصه کار و بار روزمره تان خبر میدهد.</p>
+        </div>
+
+        <div class="feature-item">
+            <h3>آفلاین، امن، و با بکاپ</h3>
+            <p>بدون نیاز به انترنت کار میکند، با قفل رمز امن است، و میتوانید از معلومات تان به آسانی بکاپ بگیرید.</p>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <p>برای دریافت کود فعال سازی و پشتیبانی در واتساپ پیام ارسال کنید:</p>
+            <a href="https://wa.me/93785444401" class="contact-link"><b>+93 78 544 4401</b></a>
+        </div>
     </div>
 </div>
 
