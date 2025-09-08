@@ -4,204 +4,197 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>روزنامچه - دستیار هوشمند کسب و کار شما</title>
-    <meta name="description" content="روزنامچه: اپلیکیشن آفلاین برای مدیریت فروش، خرید، گدام (انبار)، و حسابات مشتریان برای دکانداران و کسب و کارهای کوچک در افغانستان.">
+    <meta name="description" content="روزنامچه: اپلیکیشن آفلاین برای مدیریت فروش، خرید، گدام، و حسابات مشتریان برای دکانداران در افغانستان.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary-color: #4A148C;
-            --secondary-color: #00BFA5;
-            --background-color: #ffffff;
+            --primary-color: #4A148C; /* Deep Purple */
+            --secondary-color: #00BFA5; /* Vibrant Teal */
+            --light-bg: #f4f6f9;
             --dark-text: #212529;
             --light-text: #ffffff;
             --muted-text: #6c757d;
         }
 
-        html, body {
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--primary-color); /* Start with the dark color */
+            color: var(--dark-text);
             margin: 0;
             padding: 0;
-            height: 100%;
-            font-family: 'Vazirmatn', sans-serif;
-            overflow: hidden; /* Prevents scrolling on the body itself */
+            line-height: 1.8;
         }
 
-        .split-container {
-            display: flex;
-            width: 100%;
-            height: 100%;
-        }
-
-        .left-pane {
-            background-color: var(--primary-color);
-            width: 45%;
-            color: var(--light-text);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        .section {
+            padding: 80px 25px;
             text-align: center;
-            padding: 40px;
-            box-sizing: border-box;
         }
 
-        .right-pane {
-            background-color: var(--background-color);
-            width: 55%;
-            padding: 50px;
-            box-sizing: border-box;
-            overflow-y: auto; /* Allows only this side to scroll if needed */
-        }
-
-        h1 {
-            font-size: 8vw; /* Scales with screen width */
-            font-weight: 900;
-            writing-mode: vertical-rl; /* Vertical text */
-            transform: rotate(180deg); /* Corrects orientation for Persian */
-            line-height: 1;
+        h1, h2, h3, p {
             margin: 0;
+            padding: 0;
         }
 
-        .tagline {
-            font-size: 1.3rem;
-            opacity: 0.8;
-            margin-top: 20px;
-        }
-
-        .download-button {
-            display: inline-block;
-            background: var(--secondary-color);
+        /* Hero Section (Top) */
+        .hero {
+            background-color: var(--primary-color);
             color: var(--light-text);
-            padding: 18px 35px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 1.4rem;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            margin-top: 40px;
-            border: 2px solid var(--secondary-color);
+        }
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+        }
+        .hero .tagline {
+            font-size: 1.5rem;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-top: 15px;
         }
 
-        .download-button:hover {
-            background-color: transparent;
-            color: var(--secondary-color);
-            transform: scale(1.05);
+        /* Features Section */
+        .features {
+            background-color: var(--light-bg);
         }
-
-        .right-pane h2 {
+        .features h2 {
             font-size: 2.2rem;
             color: var(--primary-color);
-            margin-top: 0;
-            margin-bottom: 30px;
-            font-weight: 700;
+            margin-bottom: 40px;
         }
-
         .feature-item {
-            margin-bottom: 25px;
+            margin-bottom: 40px;
         }
-
+        .feature-icon {
+            font-size: 3rem; /* Emojis */
+            display: block;
+            margin-bottom: 10px;
+        }
         .feature-item h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--dark-text);
-            display: flex;
-            align-items: center;
+            margin-bottom: 5px;
         }
-
-        .feature-item h3::before {
-            content: '✓';
-            color: var(--secondary-color);
-            font-size: 1.5rem;
-            margin-left: 10px;
-        }
-
         .feature-item p {
-            margin: 0 0 0 30px; /* Indent the description */
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--muted-text);
+            max-width: 400px;
+            margin: 0 auto;
         }
 
-        .contact-link {
+        /* Download Section */
+        .download {
+            background-color: #ffffff;
+        }
+        .download h2 {
+            font-size: 2.2rem;
             color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        .download .subtext {
+            font-size: 1.1rem;
+            color: var(--muted-text);
+            margin-bottom: 30px;
+        }
+        .download-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--secondary-color), #009688);
+            color: var(--light-text);
+            padding: 20px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.6rem;
             font-weight: 700;
-            font-size: 1.3rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 6px 20px rgba(0, 191, 165, 0.4);
+        }
+        .download-button:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 191, 165, 0.5);
+        }
+        .install-steps {
+            font-size: 0.9rem;
+            color: var(--muted-text);
+            margin-top: 25px;
+        }
+
+        /* Contact Section */
+        .contact {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+        }
+        .contact h2 {
+            color: var(--light-text);
+            margin-bottom: 15px;
+        }
+        .contact p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        .contact a {
+            color: var(--secondary-color);
+            font-weight: 700;
+            font-size: 1.8rem;
             text-decoration: none;
             display: block;
             direction: ltr;
             margin-top: 10px;
+            letter-spacing: 1px;
         }
 
-        /* Responsive design for mobile */
-        @media (max-width: 800px) {
-            .split-container {
-                flex-direction: column;
-                height: auto;
-            }
-            .left-pane, .right-pane {
-                width: 100%;
-                height: auto;
-            }
-            .left-pane {
-                padding: 60px 20px;
-            }
-            h1 {
-                writing-mode: horizontal-tb; /* Horizontal text on mobile */
-                transform: none;
-                font-size: 3.5rem;
-            }
-            .right-pane {
-                padding: 40px 20px;
-            }
-        }
     </style>
 </head>
 <body>
 
-<div class="split-container">
-    <div class="left-pane">
-        <h1>روزنامچه</h1>
-        <p class="tagline">دستیار هوشمند کسب و کار شما</p>
-        <a href="https://github.com/MLd10Sar/Esmat/releases/download/v1.0.0/app-release.apk" class="download-button">
-            دانلود مستقیم
-        </a>
+<div class="section hero">
+    <h1>روزنامچه</h1>
+    <p class="tagline">دستیار هوشمند و آفلاین برای کسب و کار شما</p>
+</div>
+
+<div class="section features">
+    <h2>تمام ابزارهای مورد نیاز شما</h2>
+
+    <div class="feature-item">
+        <span class="feature-icon">📦</span>
+        <h3>مدیریت هوشمند گدام</h3>
+        <p>با هر خرید و فروش، موجودی اجناس تان بطور دقیق و خودکار آپدیت میشود.</p>
     </div>
 
-    <div class="right-pane">
-        <h2>تمام حسابات در کنترول شما. همیشه و همه جا.</h2>
-
-        <div class="feature-item">
-            <h3>مدیریت هوشمند گدام</h3>
-            <p>با هر خرید و فروش، موجودی اجناس تان بطور دقیق و خودکار آپدیت میشود.</p>
-        </div>
-
-        <div class="feature-item">
-            <h3>حساب کامل مشتریان</h3>
-            <p>تمام طلب و بدهی مشتریان را مدیریت کنید، پرداخت های قسمی را ثبت کرده و صورت حساب مسلکی ارسال کنید.</p>
-        </div>
-
-        <div class="feature-item">
-            <h3>داشبورد زنده با فلتر تاریخ</h3>
-            <p>مفاد و ضرر تان را برای امروز، این هفته، یا این ماه ببینید. تمام حسابات بصورت زنده آپدیت میشود.</p>
-        </div>
-
-        <div class="feature-item">
-            <h3>یادآوری های هوشمند</h3>
-            <p>برنامه بطور خودکار به شما از قرضداری های پرداخت نشده و خلاصه کار و بار روزمره تان خبر میدهد.</p>
-        </div>
-
-        <div class="feature-item">
-            <h3>آفلاین، امن، و با بکاپ</h3>
-            <p>بدون نیاز به انترنت کار میکند، با قفل رمز امن است، و میتوانید از معلومات تان به آسانی بکاپ بگیرید.</p>
-        </div>
-
-        <div style="margin-top: 40px;">
-            <p>برای دریافت کود فعال سازی و پشتیبانی در واتساپ پیام ارسال کنید:</p>
-            <a href="https://wa.me/93785444401" class="contact-link"><b>+93 78 544 4401</b></a>
-        </div>
+    <div class="feature-item">
+        <span class="feature-icon">👥</span>
+        <h3>حساب کامل مشتریان</h3>
+        <p>تمام طلب و بدهی مشتریان را مدیریت کنید، پرداخت های قسمی را ثبت کرده و صورت حساب مسلکی ارسال کنید.</p>
     </div>
+
+    <div class="feature-item">
+        <span class="feature-icon">🔔</span>
+        <h3>یادآوری های هوشمند</h3>
+        <p>برنامه بطور خودکار به شما از قرضداری های پرداخت نشده و خلاصه کار و بار روزمره تان خبر میدهد.</p>
+    </div>
+</div>
+
+<div id="download" class="section download">
+    <h2>همین حالا شروع کنید</h2>
+    <p class="subtext">برنامه را دانلود کرده و تا ۱۵ معامله را بطور رایگان امتحان کنید!</p>
+    <a href="https://github.com/MLd10Sar/Esmat/releases/download/v1.0.0/app-release.apk" class="download-button">
+        دانلود مستقیم اپلیکیشن
+    </a>
+    <p class="install-steps">
+        بعد از دانلود، فایل را باز کرده و دکمه <b>Install (نصب)</b> را بزنید.
+        <br>
+        اگر پیام امنیتی ظاهر شد، <b>Settings (تنظیمات)</b> را انتخاب کنید.
+    </p>
+</div>
+
+<div class="section contact">
+    <h2>پشتیبانی و کود فعال سازی</h2>
+    <p>برای دریافت کود فعال سازی و یا هر نوع سوال، به شماره واتساپ ما پیام ارسال کنید:</p>
+    <a href="https://wa.me/93785444401"><b>+93 78 544 4401</b></a>
 </div>
 
 </body>
