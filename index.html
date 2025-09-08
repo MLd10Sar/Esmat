@@ -14,6 +14,7 @@
         :root {
             --primary-color: #4A148C; /* Deep Purple */
             --secondary-color: #00BFA5; /* Vibrant Teal */
+            --whatsapp-green: #25D366;
             --light-gray-bg: #f4f6f9;
             --dark-text: #212529;
             --light-text: #ffffff;
@@ -32,153 +33,60 @@
             line-height: 1.8;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: var(--card-bg);
-            box-shadow: 0 10px 60px rgba(0,0,0,0.08);
-        }
+        /* ... (Keep your existing .container, .header, .content, .section-title, etc. styles) ... */
 
-        .header {
-            text-align: center;
-            padding: 80px 20px;
-            background: linear-gradient(135deg, var(--primary-color), #6A1B9A);
-            color: var(--light-text);
-        }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 20px; }
+        .feature-card { display: flex; flex-direction: column; text-align: center; background-color: #f8f9fa; padding: 30px; border-radius: var(--border-radius); border-bottom: 5px solid transparent; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+        .feature-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); border-bottom-color: var(--secondary-color); }
+        .feature-card .icon { font-size: 3rem; margin-bottom: 15px; }
+        .feature-card h3 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 1.4rem; font-weight: 700; }
+        .feature-card p { font-size: 1rem; color: #555; margin-bottom: 0; flex-grow: 1; }
 
-        h1 {
-            font-size: 3.8rem;
-            margin: 0;
-            font-weight: 800;
-        }
+        .download-section { padding: 60px 20px; text-align: center; background-color: var(--light-gray-bg); }
+        .download-button { display: inline-block; background: linear-gradient(45deg, var(--secondary-color), #009688); color: var(--light-text); padding: 20px 40px; border-radius: 50px; text-decoration: none; font-size: 1.5rem; font-weight: 700; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(0, 191, 165, 0.4); }
+        .download-button:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 25px rgba(0, 191, 165, 0.6); }
+        .install-steps { font-size: 1rem; color: #666; margin-top: 25px; line-height: 1.8; }
 
-        .header p {
-            font-size: 1.5rem;
-            opacity: 0.9;
-            margin-top: 10px;
-            font-weight: 400;
-        }
+        .contact-section { text-align: center; padding: 50px 20px; }
+        .contact-section h3 { font-size: 1.6rem; color: var(--dark-text); margin: 0 0 15px 0; font-weight: 500; }
+        .contact-section p { margin-bottom: 15px; }
+        .contact-section a { color: var(--primary-color); font-weight: 700; font-size: 1.5rem; text-decoration: none; display: inline-block; direction: ltr; }
 
-        .content {
-            padding: 50px 40px;
-        }
+        .footer { text-align: center; padding: 25px; font-size: 0.9rem; background-color: var(--dark-text); color: #ccc; }
 
-        .section-title {
-            font-size: 2.2rem;
-            color: var(--primary-color);
-            text-align: center;
-            margin: 0 0 40px 0;
-            font-weight: 700;
-        }
-
-        /* NEW: Feature Showcase with Icons */
-        .feature-showcase {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .feature-card {
+        /* --- NEW: Floating WhatsApp Button Styles --- */
+        .whatsapp-fab {
+            position: fixed;
+            bottom: 20px;
+            left: 20px; /* For RTL, left is correct */
+            width: 60px;
+            height: 60px;
+            background-color: var(--whatsapp-green);
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
-            text-align: center;
-            background-color: #f8f9fa;
-            padding: 30px;
-            border-radius: var(--border-radius);
-            border-bottom: 5px solid transparent;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        .whatsapp-fab:hover {
+            transform: scale(1.1);
+        }
+        .whatsapp-fab svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
         }
 
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-            border-bottom-color: var(--secondary-color);
+        /* NEW: Pulse animation for when it becomes visible */
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+            50% { transform: scale(1.1); box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         }
-
-        .feature-card .icon {
-            font-size: 3rem; /* Emojis will inherit this size */
-            margin-bottom: 15px;
-        }
-
-        .feature-card h3 {
-            margin: 0 0 10px 0;
-            color: var(--primary-color);
-            font-size: 1.4rem;
-            font-weight: 700;
-        }
-
-        .feature-card p {
-            font-size: 1rem;
-            color: #555;
-            margin-bottom: 0;
-            flex-grow: 1;
-        }
-
-        .download-section {
-            padding: 60px 20px;
-            text-align: center;
-            background-color: var(--light-gray-bg);
-        }
-
-        .download-button {
-            display: inline-block;
-            background: linear-gradient(45deg, var(--secondary-color), #009688);
-            color: var(--light-text);
-            padding: 20px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 1.5rem;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(0, 191, 165, 0.4);
-        }
-
-        .download-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 191, 165, 0.6);
-        }
-
-        .install-steps {
-            font-size: 1rem;
-            color: #666;
-            margin-top: 25px;
-            line-height: 1.8;
-        }
-
-        .contact-section { /* Renamed for clarity */
-            text-align: center;
-            padding: 50px 20px;
-            background-color: #e9ecef;
-        }
-
-        .contact-section h3 {
-            font-size: 1.6rem;
-            color: var(--dark-text);
-            margin: 0 0 15px 0;
-            font-weight: 500;
-        }
-
-        .contact-section p {
-             margin-bottom: 15px;
-        }
-
-        .contact-section a {
-            color: var(--primary-color);
-            font-weight: 700;
-            font-size: 1.5rem;
-            text-decoration: none;
-            display: inline-block;
-            direction: ltr;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 25px;
-            font-size: 0.9rem;
-            color: #888;
-            background-color: var(--dark-text);
-            color: #ccc;
+        .whatsapp-fab.animate {
+            animation: pulse 1.5s infinite;
         }
 
     </style>
@@ -186,73 +94,55 @@
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>روزنامچه</h1>
-        <p>دستیار هوشمند برای مدیریت دکان شما</p>
-    </div>
-
-    <div class="content">
-        <h2 class="section-title">تمام ابزارهای مورد نیاز شما در یک برنامه</h2>
-
-        <div class="feature-showcase">
-            <div class="feature-card">
-                <div class="icon">📈</div>
-                <h3>داشبورد زنده با فلتر تاریخ</h3>
-                <p>مفاد و ضرر تان را برای امروز، این هفته، یا این ماه ببینید. تمام حسابات بصورت زنده آپدیت میشود.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">📦</div>
-                <h3>مدیریت هوشمند گدام</h3>
-                <p>با هر خرید و فروش، موجودی اجناس شما خود به خود و بطور دقیق کم و زیاد میشود.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">👥</div>
-                <h3>حساب کامل مشتریان</h3>
-                <p>تمام طلب و بدهی مشتریان را مدیریت کنید. پرداخت های قسمی را ثبت کرده و صورت حساب مسلکی ارسال کنید.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">🔔</div>
-                <h3>یادآوری های هوشمند</h3>
-                <p>برنامه بطور خودکار به شما از قرضداری های پرداخت نشده و خلاصه کار و بار روزمره تان خبر میدهد.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">🛡️</div>
-                <h3>آفلاین، امن، و با بکاپ</h3>
-                <p>بدون نیاز به انترنت کار میکند، با قفل رمز امن است، و میتوانید از معلومات تان به آسانی بکاپ بگیرید.</p>
-            </div>
-            <div class="feature-card">
-                <div class="icon">🧾</div>
-                <h3>ارسال بل مسلکی</h3>
-                <p>برای مشتریان تان بل های زیبا و مسلکی با لوگوی دکان تان از طریق واتساپ ارسال کنید.</p>
-            </div>
-        </div>
-    </div>
+    <!-- ... (Header and Content sections are unchanged) ... -->
 
     <div id="download" class="download-section">
         <h2 class="section-title">همین حالا شروع کنید</h2>
         <p style="margin-bottom: 30px;">روزنامچه را دانلود کرده و تا ۱۵ معامله را بطور رایگان امتحان کنید!</p>
-
-        <a href="https://github.com/MLd10Sar/Esmat/releases/download/v1.0.0/app-release.apk" class="download-button">
-            دانلود مستقیم اپلیکیشن (APK)
-        </a>
-
+        <a href="https://github.com/MLd10Sar/Esmat/releases/download/v1.0.0/app-release.apk" class="download-button">دانلود مستقیم اپلیکیشن (APK)</a>
         <p class="install-steps">
-            بعد از دانلود، فایل را باز کرده و دکمه <b>Install (نصب)</b> را بزنید.
-            <br>
+            بعد از دانلود، فایل را باز کرده و دکمه <b>Install (نصب)</b> را بزنید.<br>
             اگر پیام امنیتی ظاهر شد، <b>Settings (تنظیمات)</b> را انتخاب کرده و اجازه نصب را فعال کنید.
         </p>
     </div>
 
-    <div class="contact-section">
+    <!-- The original contact section can remain as a fallback -->
+    <div id="contact" class="contact-section">
         <h3>پشتیبانی و کود فعال سازی</h3>
         <p>برای دریافت کود فعال سازی و یا هر نوع سوال، به شماره واتساپ ما پیام ارسال کنید:</p>
         <a href="https://wa.me/93785444401"><b>+93 78 544 4401</b></a>
     </div>
 
     <div class="footer">
-        <p>&copy; 2025 روزنامچه. تمام حقوق محفوظ است.</p>
+        <p>&copy; 2024 روزنامچه. تمام حقوق محفوظ است.</p>
     </div>
 </div>
+
+<!-- --- NEW: Floating WhatsApp Button HTML --- -->
+<!-- This goes just before the closing </body> tag -->
+<a href="https://wa.me/93785444401" class="whatsapp-fab" id="whatsapp-fab" aria-label="Contact us on WhatsApp">
+    <!-- SVG for WhatsApp Icon -->
+    <svg viewBox="0 0 32 32"><path d=" M19.11 17.205c-.372 0-1.088 1.39-1.518 1.39a.63.63 0 0 1-.315-.1c-.802-.402-1.504-.817-2.163-1.447-.545-.516-1.146-1.29-1.46-1.963a.426.426 0 0 1-.073-.215c0-.33.99-.945.99-1.49 0-.544-.727-1.49-1.49-1.49-.76 0-1.213.516-1.49.516-.277 0-.545-.015-.817-.015-.27-.003-.544.03-.81.045-.27.015-.65.11-.964.315-.315.195-.516.42-.65.65-.134.23-.244.42-.27.465-.015.03-.045.12-.045.12s-.315.75.105 1.59c.405.84.81 1.59 1.59 2.345 1.77 1.77 3.245 3.12 4.935 4.41.65.495 1.212.81 1.845 1.065.63.27 1.29.405 1.845.405.75 0 1.59-.15 1.59-1.245 0-.615-.545-1.17-.545-1.17s-.015-.015-.045-.045c-.03-.03-.045-.045-.045-.045-.015-.015-.015-.015-.03-.03-.015-.015-.015-.03-.03-.03s-.045-.045-.045-.06z M22.755 9.245a11.12 11.12 0 0 0-7.972-3.328c-6.15 0-11.144 4.994-11.144 11.144 0 1.95.516 3.9 1.49 5.64L3 29.5l3.495-1.49a11.12 11.12 0 0 0 5.64 1.49c6.15 0 11.144-4.994 11.144-11.144a11.12 11.12 0 0 0-3.315-7.972z M14.783 26.1a9.23 9.23 0 0 1-4.7-1.3l-.33-.195-3.495 1.49 1.49-3.495-.195-.33a9.23 9.23 0 0 1-1.3-4.7c0-5.16 4.17-9.33 9.33-9.33 2.58 0 4.995 1.02 6.8 2.82a9.213 9.213 0 0 1 2.82 6.8c0 5.16-4.17 9.33-9.33 9.33z"/></svg>
+</a>
+
+<!-- --- NEW: JavaScript to animate the button --- -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const fab = document.getElementById("whatsapp-fab");
+        const contactSection = document.getElementById("contact");
+
+        const observer = new IntersectionObserver(function(entries) {
+            // isIntersecting is true when the element is in view
+            if(entries[0].isIntersecting === true) {
+                fab.classList.add("animate");
+            } else {
+                fab.classList.remove("animate");
+            }
+        }, { threshold: [0] }); // Fire when any part of the element is visible
+
+        observer.observe(contactSection);
+    });
+</script>
 
 </body>
 </html>

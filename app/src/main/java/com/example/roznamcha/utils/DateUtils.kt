@@ -9,62 +9,64 @@ import java.util.*
 
 object DateUtils {
 
-    private val afghanShamsiMonths = arrayOf(
+    // A reusable formatter for the standard Gregorian date (e.g., 2025/09/07)
+    private val gregorianFormatter = SimpleDateFormat("yyyy/MM/dd", Locale.US)
+
+    // --- We will define the Afghan month names ourselves ---
+    private val AFGHAN_MONTH_NAMES = arrayOf(
         "حمل", "ثور", "جوزا", "سرطان", "اسد", "سنبله",
         "میزان", "عقرب", "قوس", "جدی", "دلو", "حوت"
     )
 
     /**
-     * The main function the app will call.
-     * It checks the user's preference and formats the timestamp accordingly.
+     * The single, authoritative function to format a date timestamp throughout the app.
+     * It checks the user's preference in SettingsManager and returns the correctly formatted date string.
+     *
+     * @param context The application context.
+     * @param millis The timestamp in UTC milliseconds to format.
+     * @return A formatted date string (e.g., "۱۶ سنبله ۱۴۰۴" or "2025/09/07").
      */
-    fun formatMillis(context: Context, millis: Long, format: String = "Y F d"): String {
+    fun formatMillis(context: Context, millis: Long): String {
+        // 1. Check the user's saved preference
         val preferredFormat = SettingsManager.getDateFormat(context)
 
         return if (preferredFormat == "SHAMSI") {
             try {
-                // Use the new, reliable library for conversion
+                // 2. Create a PersianDate object from the timestamp
                 val persianDate = PersianDate(millis)
 
-                // "Y F d" -> "1403 حمل 5"
-                // The library uses 'F' for the full month name.
-                val formatter = PersianDateFormat(format, PersianDateFormat.PersianDateNumberCharacter.FARSI)
+                // 3. Manually build the date string using our custom month names
+                val day = persianDate.shDay
+                val monthName = AFGHAN_MONTH_NAMES[persianDate.shMonth - 1] // -1 because array is 0-indexed
+                val year = persianDate.shYear
 
-                // Manually replace the Iranian month name with the Afghan one
-                formatter.format(persianDate)
-                    .replace("فروردین", "حمل")
-                    .replace("اردیبهشت", "ثور")
-                    .replace("خرداد", "جوزا")
-                    .replace("تیر", "سرطان")
-                    .replace("مرداد", "اسد")
-                    .replace("شهریور", "سنبله")
-                    .replace("مهر", "میزان")
-                    .replace("آبان", "عقرب")
-                    .replace("آذر", "قوس")
-                    .replace("دی", "جدی")
-                    .replace("بهمن", "دلو")
-                    .replace("اسفند", "حوت")
+                // Use Persian numbers by converting them
+                "$day".toFarsiNumber() + " " + monthName + " " + "$year".toFarsiNumber()
 
             } catch (e: Exception) {
-                // Fallback to Gregorian if anything goes wrong
-                SimpleDateFormat("yyyy/MM/dd", Locale.US).format(Date(millis))
+                // If anything goes wrong, fall back to Gregorian to prevent a crash.
+                gregorianFormatter.format(Date(millis))
             }
-            convertToShamsi(millis)
         } else {
-            // Gregorian
-            SimpleDateFormat("yyyy/MM/dd", Locale.US).format(Date(millis))
-            val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.US)
-            dateFormat.format(Date(millis))
+            // 4. If Gregorian, just use the standard Gregorian formatter.
+            gregorianFormatter.format(Date(millis))
         }
     }
-    private fun convertToShamsi(millis: Long): String {
-        // This is a placeholder for your actual Shamsi conversion library/logic.
-        // Let's create a simple one for demonstration.
-        // You would replace this with your real library call.
-        val calendar = Calendar.getInstance().apply { timeInMillis = millis }
-        val year = calendar.get(Calendar.YEAR) - 621 // Approximate
-        val month = calendar.get(Calendar.MONTH) + 1 // Not accurate, just for show
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-        return "شمسی: $year/$month/$day" // Example output
+
+    /**
+     * An extension function to convert English digit strings to Persian digits.
+     */
+    private fun String.toFarsiNumber(): String {
+        return this
+            .replace("0", "۰")
+            .replace("1", "۱")
+            .replace("2", "۲")
+            .replace("3", "۳")
+            .replace("4", "۴")
+            .replace("5", "۵")
+            .replace("6", "۶")
+            .replace("7", "۷")
+            .replace("8", "۸")
+            .replace("9", "۹")
     }
 }
